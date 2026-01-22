@@ -1,0 +1,105 @@
+@use "../globalStyle" as *
+@use "../globalVar" as *
+
+#Page-Container
+    #Loginpage
+        width: 100%
+        height: 100vh
+        display: flex
+        align-items: center
+        justify-content: space-between
+        padding-right: 2rem
+        background-color: #bbffee
+        @include for-big-screen
+            padding-right: 3rem
+
+        #Banner
+            width: 65vw
+            height: 100vh
+            @include bg-img-center(45vh)
+            @include for-big-screen
+                width: 80vw
+                background-size: 33vh
+
+        #Form-Container
+            width: 28vw
+            height: 80vh
+            background-color: $navbar-bg
+            border-radius: 1rem
+            border: 0.15rem solid #eee
+            @include shadow
+            @include for-big-screen
+                width: 20vw
+                height: 70vh
+
+            #Form-Header
+                width: 100%
+                margin-bottom: 0.5rem
+                margin-top: 2rem
+                color: #eee
+                @include for-big-screen
+                    margin-top: 3rem
+
+                #Form-Title
+                    text-align: center
+                    font-size: 16px
+                    line-height: 16px
+                    padding: 10px 0px 10px 0px
+
+            #Form
+                .Form-Group
+                    width: 100%
+                    padding: 0 1rem 0 1rem
+                    margin-bottom: 1rem
+
+                    label
+                        font-size: 0.9rem
+                        color: #eee
+                        padding-left: 0.2rem
+
+                    input
+                        @include rm-def-input-styles
+                        width: 100%
+                        height: 2.5rem
+                        padding: 1rem 0.5rem 1rem 0.5rem
+                        margin: 0.2rem 0 0 0
+                        border-radius: 0.3rem
+                        background-color: #eee
+
+                    #Password-Input-Container
+                        @include flex-center
+                        position: relative
+
+                        .Password-Icon
+                            position: absolute
+                            right: 0.7rem
+                            cursor: pointer
+
+                #Form-Buttons
+                    width: 100%
+                    padding: 0 1rem 0 1rem
+                    margin-top: 5px
+                    display: flex
+                    justify-content: flex-end
+
+                    button
+                        @include rm-def-btn-styles
+                        font-size: 0.8rem
+                        cursor: pointer
+                        border: 1px solid #eee
+                        background-color: #eee
+                        padding: 0.4rem 1.5rem 0.4rem 1.5rem
+                        border-radius: 1rem
+
+                #Forgot-Password-Text
+                    font-size: 12px
+                    padding: 0.5rem 1rem 0.5rem 1rem
+                    color: #eee
+
+                    #Forgot-Password-Link
+                        cursor: pointer
+                        color: rgb(56, 240, 194)
+                        font-weight: bold
+
+                        &:hover
+                            opacity: 0.8

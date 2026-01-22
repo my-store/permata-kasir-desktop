@@ -1,0 +1,49 @@
+@mixin shadow($percentage: 0.75)
+  box-shadow: 0px 0px 7px 0px rgba(0,0,0,$percentage)
+  -webkit-box-shadow: 0px 0px 7px 0px rgba(0,0,0,$percentage)
+  -moz-box-shadow: 0px 0px 7px 0px rgba(0,0,0,$percentage)
+
+@mixin rm-def-btn-styles
+  border: none
+  outline: none
+  background: none
+
+@mixin rm-def-input-styles
+  border: none
+  outline: none
+  background: none
+
+@mixin padx($pad: 1rem)
+  padding: 0px $pad 0px $pad
+
+@mixin pady($pad: 1rem)
+  padding: $pad 0px $pad 0px
+
+@mixin padxy($pad: 1rem)
+  padding: $pad $pad $pad $pad
+
+@mixin flex-center($direction: row)
+  display: flex
+  align-items: center
+  flex-direction: $direction
+
+@mixin flex-just-center($direction: row)
+  justify-content: center
+  @include flex-center($direction)
+
+@mixin flex-just-space-around($direction: row)
+  justify-content: space-around
+  @include flex-center($direction)
+
+@mixin flex-just-space-between($direction: row)
+  justify-content: space-between
+  @include flex-center($direction)
+
+@mixin bg-img-center($size: cover)
+  background-repeat: no-repeat
+  background-position: center
+  background-size: $size
+
+@mixin for-big-screen
+  @media (min-width: 1005px)
+    @content
