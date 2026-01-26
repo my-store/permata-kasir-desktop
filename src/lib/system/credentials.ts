@@ -8,11 +8,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 26-Jan-2026
 */
 
 import { SERVER_URL } from "../constants/server.constant";
 import { JSONGet, JSONPost } from "./requests";
+import { Error, Log, Warn } from "./log";
 
 export const cred_name: string = "permata.kasir.login.credentials";
 
@@ -31,12 +32,16 @@ export function getLoginCredentials(): any {
 }
 
 export function removeLoginCredentials(): void {
+  Log(`Menghapus: LocalStorage(${cred_name})`);
   localStorage.removeItem(cred_name);
 }
 
 export async function getUserData(tlp: string, loginData: any): Promise<any> {
-  let userData: any = null;
   const getProfileURL: string = `${SERVER_URL}/api/v1/${loginData.role.toLowerCase()}/${tlp}`;
+
+  Log(`Mengambil data ${loginData.role}:\n${getProfileURL}`);
+
+  let userData: any = null;
   try {
     const getUser = await JSONGet(getProfileURL, {
       headers: { Authorization: `Bearer ${loginData.access_token}` },
@@ -48,17 +53,28 @@ export async function getUserData(tlp: string, loginData: any): Promise<any> {
       getUser.createdAt &&
       getUser.updatedAt
     ) {
+      Log(`Menyimpan data login:\n${getUser}`);
+
       const {
         password, // Remove "Password" from login data
         ...loginData
       }: any = getUser;
       userData = { ...loginData };
+    } else {
+      Warn(
+        `Data ${loginData.role} tidak valid:\nField yang dibutuhkan: [nama, tlp, foto, createdAt, updatedAt]\nField dari server: ${Object.keys(getUser)}`,
+      );
     }
-  } catch (error) {}
+  } catch (error) {
+    Error(`Gagal mengambil data ${loginData.role}:\n${getProfileURL}`);
+  }
+
   return userData;
 }
 
 export async function getAuthProfile(access_token: string): Promise<any> {
+  Log("Mengambil profile login");
+
   let profile: any = null;
   try {
     // Melakukan pengecekan ke server apakah token masih aktif
@@ -79,12 +95,21 @@ export async function getAuthProfile(access_token: string): Promise<any> {
     // role = User/Kasir
     if (iat && exp && sub && role) {
       profile = getProfile;
+    } else {
+      Warn(
+        `Profile login tidak valid:\nField yang dibutuhkan: [iat, exp, sub, role]\nField dari server: ${Object.keys(getProfile)}`,
+      );
     }
-  } catch {}
+  } catch (error) {
+    Error(`Gagal mengambil profile login:\n${error}`);
+  }
+
   return profile;
 }
 
 export async function refreshToken(tlp: string): Promise<boolean> {
+  Log("Memperbarui token login");
+
   let tokenRefreshed: any = false;
   try {
     // Melakukan permintaan ke server untuk dibuatkan token baru
@@ -99,11 +124,11 @@ export async function refreshToken(tlp: string): Promise<boolean> {
     // access_token yang akan digunakan pada headers.Authorization
     // role = Kasir atau User, ini server yang menentukan saat proses login
     // server akan mencari tahu siapa yang sedang login.
-    if (!rt.access_token && rt.refresh_token && !rt.role) {
+    if (rt.access_token && rt.refresh_token && rt.role) {
       // Get user data
       const userData = await getUserData(tlp, rt);
 
-      // No user data is found
+      // User is still exists (not deleted)
       if (userData) {
         const newToken = { ...rt, data: userData };
         // Update credentials on local storage
@@ -115,8 +140,25 @@ export async function refreshToken(tlp: string): Promise<boolean> {
         | User | Kasir
         */
         tokenRefreshed = true;
+
+        Log("Token login berhasil di perbarui");
+      }
+
+      // User not found, maybe deleted by admin
+      else {
+        Log("Data user tidak ditemukan");
       }
     }
-  } catch {}
+
+    // Invalid token field from server
+    else {
+      Log(
+        `Login token tidak valid:\nField yang dibutuhkan [access_token, refresh_token, role]\nField yang diberikan server: [${rt}]`,
+      );
+    }
+  } catch (error) {
+    Log(`Gagal memperbarui token login:\n${error}`);
+  }
+
   return tokenRefreshed;
 }

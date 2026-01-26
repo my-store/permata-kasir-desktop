@@ -1,5 +1,5 @@
 // Libraries
-import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/server.constant";
+import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
 import {
   rootRemoveLoading,
   rootOpenLoading,
@@ -10,6 +10,7 @@ import { removeLoginCredentials } from "../../../lib/system/credentials";
 import { logout } from "../../../lib/redux/reducers/login.reducer";
 import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { socket } from "../../../main";
 import $ from "jquery";
 
 // User Root Page | Entrypoint
@@ -23,6 +24,7 @@ function Entrypoint(): ReactNode {
           removeLoginCredentials();
           dispatch(rootOpenLoading());
           dispatch(logout());
+          socket.disconnect();
         }}
       >
         Keluar

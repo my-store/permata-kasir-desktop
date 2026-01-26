@@ -1,5 +1,7 @@
 // Libraries
-import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/server.constant";
+import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
+import { removeLoginCredentials } from "../../../lib/system/credentials";
+import { logout } from "../../../lib/redux/reducers/login.reducer";
 
 // Node Modules
 import {
@@ -9,6 +11,16 @@ import {
 import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import $ from "jquery";
+
+// Templates
+import { Navbar } from "../../../templates/Navbar";
+import { Sidebar } from "../../../templates/Sidebar";
+
+// Kasir Style
+import "../../../styles/pages/kasir.style.sass";
+
+// Socket object inside main.tsx
+import { socket } from "../../../main";
 
 // Kasir Root Page | Entrypoint
 function Entrypoint(): ReactNode {
@@ -21,6 +33,7 @@ function Entrypoint(): ReactNode {
           removeLoginCredentials();
           dispatch(rootOpenLoading());
           dispatch(logout());
+          socket.disconnect();
         }}
       >
         Keluar
@@ -28,13 +41,6 @@ function Entrypoint(): ReactNode {
     </div>
   );
 }
-
-// Kasir Style
-import "../../../styles/pages/kasir.style.sass";
-import { Navbar } from "../../../templates/Navbar";
-import { Sidebar } from "../../../templates/Sidebar";
-import { logout } from "../../../lib/redux/reducers/login.reducer";
-import { removeLoginCredentials } from "../../../lib/system/credentials";
 
 function KasirGlobalTemplates({ children, socketConnect }: any) {
   const dispatch = useDispatch();

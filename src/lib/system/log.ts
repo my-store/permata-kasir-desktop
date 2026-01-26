@@ -7,12 +7,17 @@
 |   2. Warning = Kuning
 |   3. Error = Merah
 |  -----------------------------------------------------------
+|  APP_MODE, ini berguna untuk menampilkan log hanya
+|  pada saat development saja.
+|  -----------------------------------------------------------
 |  Jangan lupa untuk memperbarui dokumen ini
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 26-Jan-2026
 */
+
+import { APP_MODE } from "../constants/app.constant";
 
 export function time(): string {
   const d = new Date();
@@ -22,6 +27,7 @@ export function time(): string {
 }
 
 export function Log(text: string): void {
+  if (APP_MODE != "development") return;
   const style = `
         color: white;
         background-color: green;
@@ -30,6 +36,7 @@ export function Log(text: string): void {
 }
 
 export function Error(text: string): void {
+  if (APP_MODE != "development") return;
   const style = `
         color: white;
         background-color: red;
@@ -38,6 +45,7 @@ export function Error(text: string): void {
 }
 
 export function Warn(text: string): void {
+  if (APP_MODE != "development") return;
   const style = `
         color: black;
         background-color: yellow;

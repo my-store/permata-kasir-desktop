@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 26-Jan-2026
 */
 
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
@@ -16,7 +16,7 @@ import "../../styles/templates/loading.style.sass";
 import { useSelector } from "react-redux";
 
 // Page Loading Background
-import Background from "../../assets/images/background.jpg";
+import Background from "../../assets/images/electronics-background.jpg";
 
 type Easing =
   | "ease-in"

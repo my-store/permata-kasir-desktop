@@ -26,7 +26,7 @@ import { ReduxRootStateType, store } from "./lib/redux/store.redux";
 import { getLoginCredentials } from "./lib/system/credentials";
 import { SERVER_URL } from "./lib/constants/server.constant";
 import { findDeepUrl } from "./lib/system/url";
-import { Log } from "./lib/system/log";
+import { Log, Error } from "./lib/system/log";
 
 // Node Modules
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
@@ -46,7 +46,7 @@ import {
 import "./styles/app.style.sass";
 
 // Templates
-// import { PageLoading } from "./templates/loading";
+import { PageLoading } from "./templates/loading";
 import Alert from "./templates/alert";
 
 export let socket: Socket;
@@ -73,12 +73,10 @@ function ProtectedRoutes({ role }: RootProtectedLayoutInterface) {
 
 // Main Class
 function App(): ReactNode {
-  // const rootState = useSelector((state: ReduxRootStateType) => state.root);
+  const rootState = useSelector((state: ReduxRootStateType) => state.root);
   const alertState = useSelector((state: ReduxRootStateType) => state.alert);
 
   function socketConnect(callback: Function) {
-    return; // Remove this in production
-
     socket = io(SERVER_URL);
     /*
     | -----------------------------------------------------------------------
@@ -114,7 +112,7 @@ function App(): ReactNode {
     <BrowserRouter>
       <div id="Page-Container">
         {/* Loading animation */}
-        {/* {rootState.isLoading && <PageLoading easing="ease-in-out" />} */}
+        {rootState.isLoading && <PageLoading easing="ease-in-out" />}
 
         {/* Alert box */}
         {alertState.opened && <Alert />}
