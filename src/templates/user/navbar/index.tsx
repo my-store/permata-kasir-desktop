@@ -13,24 +13,37 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 27-Jan-2026
 */
 
 // Node Modules
-import { FiActivity, FiLayers } from "react-icons/fi";
+import { FiActivity, FiInfo, FiLayers, FiMail } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
 
 // Navbar Style
-import "../styles/templates/navbar.style.sass";
+import "../../../styles/templates/user-navbar.style.sass";
 
 // Entry Point
-export function Navbar(): ReactNode {
+export function UserNavbar(): ReactNode {
+  const navigate = useNavigate();
+
   return (
     <nav id="Navbar">
       <h1 id="App-Name">Permata Kasir</h1>
       <div id="Top-Badges">
         <FiActivity title="Aktifitas" className="Badges-Btn" />
         <FiLayers title="Dokumentasi" className="Badges-Btn" />
+        <FiMail
+          title="Hubungi Kami"
+          className="Badges-Btn"
+          onClick={() => navigate("/user/contact")}
+        />
+        <FiInfo
+          title="Tentang Kami"
+          className="Badges-Btn"
+          onClick={() => navigate("/user/about")}
+        />
       </div>
     </nav>
   );

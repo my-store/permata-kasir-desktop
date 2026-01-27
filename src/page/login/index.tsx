@@ -18,10 +18,7 @@ import { useEffect } from "react";
 import $ from "jquery";
 
 // Libraries
-import {
-  LOGIN_APP_NAME,
-  SERVER_URL,
-} from "../../lib/constants/server.constant";
+import { APP_PAGE_LOADING_DELAY } from "../../lib/constants/app.constant";
 import { openAlert } from "../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
 import { JSONPost } from "../../lib/system/requests";
@@ -36,6 +33,10 @@ import {
   rootRemoveLoading,
   rootOpenLoading,
 } from "../../lib/redux/reducers/root.reducer";
+import {
+  LOGIN_APP_NAME,
+  SERVER_URL,
+} from "../../lib/constants/server.constant";
 import {
   setLoginCredentials,
   getLoginCredentials,
@@ -194,7 +195,7 @@ export function Loginpage() {
     dispatch(setLoginReady(true));
 
     // Remove loading animation after 3 second
-    setTimeout(() => dispatch(rootRemoveLoading()), 3000);
+    setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
   }
 
   useEffect(() => {

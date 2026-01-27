@@ -12,10 +12,6 @@ import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import $ from "jquery";
 
-// Templates
-import { Navbar } from "../../../templates/Navbar";
-import { Sidebar } from "../../../templates/Sidebar";
-
 // Kasir Style
 import "../../../styles/pages/kasir.style.sass";
 
@@ -83,8 +79,6 @@ export const KasirRoutes: any[] = [
     path: "/kasir",
     element: (props: any) => (
       <KasirGlobalTemplates {...props}>
-        <Navbar />
-        <Sidebar />
         <Entrypoint />
       </KasirGlobalTemplates>
     ),

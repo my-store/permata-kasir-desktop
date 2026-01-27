@@ -1,36 +1,29 @@
 // Libraries
 import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
-import {
-  rootRemoveLoading,
-  rootOpenLoading,
-} from "../../../lib/redux/reducers/root.reducer";
+import { rootRemoveLoading } from "../../../lib/redux/reducers/root.reducer";
 
 // Node Modules
-import { removeLoginCredentials } from "../../../lib/system/credentials";
-import { logout } from "../../../lib/redux/reducers/login.reducer";
 import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { socket } from "../../../main";
 import $ from "jquery";
+
+// Templates
+import { UserNavbar } from "../../../templates/user/navbar";
+import { UserSidebar } from "../../../templates/user/sidebar";
+
+// User Style
+import "../../../styles/pages/user.style.sass";
+
+// Socket object inside main.tsx
+import { socket } from "../../../main";
+
+// Default pages
+import { Contactpage } from "../../contactpage";
+import { Aboutpage } from "../../aboutpage";
 
 // User Root Page | Entrypoint
 function Entrypoint(): ReactNode {
-  const dispatch = useDispatch();
-  return (
-    <div id="User-Page">
-      <h1>Halaman User</h1>
-      <button
-        onClick={() => {
-          removeLoginCredentials();
-          dispatch(rootOpenLoading());
-          dispatch(logout());
-          socket.disconnect();
-        }}
-      >
-        Keluar
-      </button>
-    </div>
-  );
+  return <h1>Halaman User</h1>;
 }
 
 function UserGlobalTemplates({ children, socketConnect }: any) {
@@ -66,7 +59,13 @@ function UserGlobalTemplates({ children, socketConnect }: any) {
     };
   }, []);
 
-  return <div id="User">{children}</div>;
+  return (
+    <div id="User">
+      <UserNavbar />
+      <UserSidebar />
+      {children}
+    </div>
+  );
 }
 
 export const UserRoutes: any[] = [
@@ -75,6 +74,22 @@ export const UserRoutes: any[] = [
     element: (props: any) => (
       <UserGlobalTemplates {...props}>
         <Entrypoint />
+      </UserGlobalTemplates>
+    ),
+  },
+  {
+    path: "/user/contact",
+    element: (props: any) => (
+      <UserGlobalTemplates {...props}>
+        <Contactpage />
+      </UserGlobalTemplates>
+    ),
+  },
+  {
+    path: "/user/about",
+    element: (props: any) => (
+      <UserGlobalTemplates {...props}>
+        <Aboutpage />
       </UserGlobalTemplates>
     ),
   },
