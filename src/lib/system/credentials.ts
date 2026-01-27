@@ -8,12 +8,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 26-Jan-2026
+|  Updated At: 27-Jan-2026
 */
 
 import { SERVER_URL } from "../constants/server.constant";
 import { JSONGet, JSONPost } from "./requests";
-import { Error, Log, Warn } from "./log";
+import { Error, Warn } from "./log";
 
 export const cred_name: string = "permata.kasir.login.credentials";
 
@@ -32,16 +32,13 @@ export function getLoginCredentials(): any {
 }
 
 export function removeLoginCredentials(): void {
-  Log(`Menghapus: LocalStorage(${cred_name})`);
+  Warn(`Menghapus: LocalStorage(${cred_name})`);
   localStorage.removeItem(cred_name);
 }
 
 export async function getUserData(tlp: string, loginData: any): Promise<any> {
-  const getProfileURL: string = `${SERVER_URL}/api/v1/${loginData.role.toLowerCase()}/${tlp}`;
-
-  Log(`Mengambil data ${loginData.role}:\n${getProfileURL}`);
-
   let userData: any = null;
+  const getProfileURL: string = `${SERVER_URL}/api/v1/${loginData.role.toLowerCase()}/${tlp}`;
   try {
     const getUser = await JSONGet(getProfileURL, {
       headers: { Authorization: `Bearer ${loginData.access_token}` },
@@ -53,8 +50,7 @@ export async function getUserData(tlp: string, loginData: any): Promise<any> {
       getUser.createdAt &&
       getUser.updatedAt
     ) {
-      Log(`Menyimpan data login:\n${getUser}`);
-
+      // Simpan data login <User | Kasir>
       const {
         password, // Remove "Password" from login data
         ...loginData
@@ -73,8 +69,6 @@ export async function getUserData(tlp: string, loginData: any): Promise<any> {
 }
 
 export async function getAuthProfile(access_token: string): Promise<any> {
-  Log("Mengambil profile login");
-
   let profile: any = null;
   try {
     // Melakukan pengecekan ke server apakah token masih aktif
@@ -95,7 +89,10 @@ export async function getAuthProfile(access_token: string): Promise<any> {
     // role = User/Kasir
     if (iat && exp && sub && role) {
       profile = getProfile;
-    } else {
+    }
+
+    // Invalid login profile
+    else {
       Warn(
         `Profile login tidak valid:\nField yang dibutuhkan: [iat, exp, sub, role]\nField dari server: ${Object.keys(getProfile)}`,
       );
@@ -108,8 +105,6 @@ export async function getAuthProfile(access_token: string): Promise<any> {
 }
 
 export async function refreshToken(tlp: string): Promise<boolean> {
-  Log("Memperbarui token login");
-
   let tokenRefreshed: any = false;
   try {
     // Melakukan permintaan ke server untuk dibuatkan token baru
@@ -140,24 +135,22 @@ export async function refreshToken(tlp: string): Promise<boolean> {
         | User | Kasir
         */
         tokenRefreshed = true;
-
-        Log("Token login berhasil di perbarui");
       }
 
       // User not found, maybe deleted by admin
       else {
-        Log("Data user tidak ditemukan");
+        Warn("Data user tidak ditemukan");
       }
     }
 
     // Invalid token field from server
     else {
-      Log(
+      Warn(
         `Login token tidak valid:\nField yang dibutuhkan [access_token, refresh_token, role]\nField yang diberikan server: [${rt}]`,
       );
     }
   } catch (error) {
-    Log(`Gagal memperbarui token login:\n${error}`);
+    Error(`Gagal memperbarui token login:\n${error}`);
   }
 
   return tokenRefreshed;

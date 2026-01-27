@@ -61,6 +61,18 @@ function KasirGlobalTemplates({ children, socketConnect }: any) {
 
     // Connect to socket server, before any tasks
     socketConnect(load);
+
+    /* -----------------------------------------------
+    |  RETURN CLEAN-UP FUNCTION
+    |  -----------------------------------------------
+    |  This can fix socket connected twice
+    |  in development mode, don't change this.
+    */
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
   }, []);
 
   return <div id="Kasir">{children}</div>;

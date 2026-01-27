@@ -7,16 +7,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 26-Jan-2026
+|  Updated At: 27-Jan-2026
 */
 
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
 import { Riple, Atom } from "react-loading-indicators";
 import "../../styles/templates/loading.style.sass";
 import { useSelector } from "react-redux";
-
-// Page Loading Background
-import Background from "../../assets/images/electronics-background.jpg";
 
 type Easing =
   | "ease-in"
@@ -76,10 +73,7 @@ export function PageLoading(props: LoadingInterface) {
     : "Page-Loading-Container";
 
   return (
-    <div
-      className={containerClass}
-      style={{ backgroundImage: `url(${Background})` }}
-    >
+    <div className={containerClass}>
       <div id="Page-Loading-Box">
         <Atom
           color={color}

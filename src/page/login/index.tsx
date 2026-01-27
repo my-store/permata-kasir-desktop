@@ -8,7 +8,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 27-Jan-2026
 */
 
 // Node Modules
@@ -18,6 +18,10 @@ import { useEffect } from "react";
 import $ from "jquery";
 
 // Libraries
+import {
+  LOGIN_APP_NAME,
+  SERVER_URL,
+} from "../../lib/constants/server.constant";
 import { openAlert } from "../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
 import { JSONPost } from "../../lib/system/requests";
@@ -43,12 +47,13 @@ import {
 // Login Style
 import "../../styles/pages/login.style.sass";
 
-// Sounds
-import errorAudio from "../../assets/sounds/error.mp3";
-
 // Images
 import ScienceBg from "../../assets/images/science.png";
-import { SERVER_URL } from "../../lib/constants/server.constant";
+
+// Sounds
+import errorAudio from "../../assets/sounds/error.mp3";
+// Initialize error sound
+const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
 // Entry Point
 export function Loginpage() {
@@ -56,9 +61,6 @@ export function Loginpage() {
   const { loginWait } = loginState;
 
   const dispatch = useDispatch();
-
-  // Initialize error sound
-  const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
   function failed(msg: string): void {
     // Play error sound
@@ -98,6 +100,9 @@ export function Loginpage() {
     const tlp: any = $("#Loginpage #tlp").val();
     const password: any = $("#Loginpage #password").val();
 
+    // Extra data (security update 27-Jan-2026)
+    const app_name: string = LOGIN_APP_NAME;
+
     // No data is presented
     if (tlp.length < 1 || password.length < 1) {
       // Terminate task
@@ -108,7 +113,7 @@ export function Loginpage() {
     let logReq: any;
     try {
       logReq = await JSONPost(`${SERVER_URL}/api/v1/auth`, {
-        body: JSON.stringify({ tlp, password }),
+        body: JSON.stringify({ tlp, password, app_name }),
       });
     } catch (error) {
       // Terminate task - Terjadi kesalahan saat mengirim request ke server

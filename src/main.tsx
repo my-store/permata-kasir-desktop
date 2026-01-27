@@ -12,7 +12,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 27-Jan-2026
 */
 
 // Pages
@@ -26,7 +26,7 @@ import { ReduxRootStateType, store } from "./lib/redux/store.redux";
 import { getLoginCredentials } from "./lib/system/credentials";
 import { SERVER_URL } from "./lib/constants/server.constant";
 import { findDeepUrl } from "./lib/system/url";
-import { Log, Error } from "./lib/system/log";
+import { Error } from "./lib/system/log";
 
 // Node Modules
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
@@ -78,28 +78,20 @@ function App(): ReactNode {
 
   function socketConnect(callback: Function) {
     socket = io(SERVER_URL);
-    /*
-    | -----------------------------------------------------------------------
-    | WHEN I'AM IS CONNECTED TO SOCKET SERVER
-    | -----------------------------------------------------------------------
-    | Get my login data in local-storage and sent to server for broadcast
-    | The last step is inside socket connected listener.
-    | -----------------------------------------------------------------------
-    | NOTE:
-    | Set login state first before set ready, only if token is still active
-    | if not, will force redirect to login page, because default value
-    | of 'isLogin' is false.
-    | If not connected to the server will never redirected.
-    */
-    socket.on("connect", () => {
-      Log("Socket is now connected");
 
+    // When socket is connected
+    socket.on("connect", () => {
       // Broadcast to other, that i'm is online now
       const { role, data } = getLoginCredentials();
       socket.emit("online", { tlp: data.tlp, role });
 
       // Return the next logic to callback
       callback();
+    });
+
+    // When socket connect is failed
+    socket.on("connect_error", (err) => {
+      Error(`Connection error due to ${err.message}`);
     });
 
     // When socket is disconected
