@@ -1,38 +1,21 @@
-// @use "./globalVar" as *
-// @use "./globalStyle" as *
+@use "./root-vars" as *
+
+@font-face
+  font-family: "Outfit-VariableFont"
+  src: url("#{$font-path}outfit/Outfit-VariableFont_wght.ttf") format("truetype")
 
 *
   padding: 0
   margin: 0
   box-sizing: border-box
+  font-family: Outfit-VariableFont
+  letter-spacing: 0.02rem
 
 // HTML Configurations
 :root
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif
   overflow: hidden
   font-synthesis: none
   text-rendering: optimizeLegibility
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   -webkit-text-size-adjust: 100%
-
-// #Container 
-//   width: $root-width
-//   height: $root-height
-//   background-color: rgb(238, 238, 238)
-
-//   // Navbar ...
-
-//   main 
-//     @include flex-center()
-//     width: $root-width
-//     height: $root-height
-
-//     #Page-Container 
-//       width: $root-width
-//       height: $root-height
-//     
-//   
-
-//   // Footer ...
-// 

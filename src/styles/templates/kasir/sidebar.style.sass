@@ -1,11 +1,12 @@
-@use "../globalVar" as *
-@use "../globalStyle" as *
+@use "../../root-vars" as *
+@use "../../kasir-vars" as *
+@use "../../root-mixin" as *
 
 #Page-Container
-  #User
+  #Kasir
     #Sidebar
       @include flex-center(column)
-      height: $root-height
+      height: $window-height
       width: $sidebar-width
       background-color: $sidebar-bg
       position: fixed
@@ -14,7 +15,7 @@
       z-index: 2
 
       #Profile
-        @include flex-just-center
+        @include flex-just-center(column)
         @include pady(0.3rem)
         margin-top: $navbar-height
         width: 100%
@@ -35,12 +36,14 @@
           -webkit-box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.44) inset
           -moz-box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.44) inset
 
-          // #Info 
-          //   #Name 
-          //   
-          //   #Phone 
-          //   
-          // 
+        #Info
+          @include pady(0.5rem)
+
+          #Name
+            font-size: 1rem
+
+          #Phone
+            font-size: 0.8rem
 
       .Btn-Container
         @include flex-center

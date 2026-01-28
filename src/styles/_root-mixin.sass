@@ -1,7 +1,9 @@
-@mixin shadow($percentage: 0.75)
-  box-shadow: 0px 0px 7px 0px rgba(0,0,0,$percentage)
-  -webkit-box-shadow: 0px 0px 7px 0px rgba(0,0,0,$percentage)
-  -moz-box-shadow: 0px 0px 7px 0px rgba(0,0,0,$percentage)
+@use "./root-function" as *
+
+@mixin shadow($x: 0, $y: 0, $blur: 0.6rem, $spread: 0, $color: #000, $percentage: 0.75)
+  box-shadow: $x $y $blur $spread semi-transparent($color, $percentage)
+  -webkit-box-shadow: $x $y $blur $spread semi-transparent($color, $percentage)
+  -moz-box-shadow: $x $y $blur $spread semi-transparent($color, $percentage)
 
 @mixin rm-def-btn-styles
   border: none

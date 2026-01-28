@@ -11,6 +11,7 @@
 */
 
 // Reducers
+import UserLoginDataReducer from "./reducers/user/login.data.reducer";
 import AlertReducer from "./reducers/alert.reducer";
 import LoginReducer from "./reducers/login.reducer";
 import RootReducer from "./reducers/root.reducer";
@@ -24,6 +25,8 @@ export const store = configureStore({
     root: RootReducer,
     login: LoginReducer,
     alert: AlertReducer,
+
+    user_login_data: UserLoginDataReducer,
   },
 });
 

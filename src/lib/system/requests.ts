@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 28-Jan-2026
 */
 
 const DefaultHeaders: any = {
@@ -23,6 +23,7 @@ export async function JSONGet(
   options?: RequestInit,
 ): Promise<any> {
   const req = await fetch(url, {
+    ...options,
     headers: {
       ...DefaultHeaders,
       ...options?.headers,
@@ -37,6 +38,7 @@ export async function JSONPatch(
   options?: RequestInit,
 ): Promise<any> {
   const req = await fetch(url, {
+    ...options,
     method: "PATCH",
     headers: {
       ...DefaultHeaders,
@@ -53,6 +55,7 @@ export async function JSONPost(
   options?: RequestInit,
 ): Promise<any> {
   const req = await fetch(url, {
+    ...options,
     method: "POST",
     headers: {
       ...DefaultHeaders,
@@ -69,6 +72,7 @@ export async function FormPost(
   options?: RequestInit,
 ): Promise<any> {
   const req = await fetch(url, {
+    ...options,
     method: "POST",
     headers: {
       // In react (browser app) is not need headers, but on other app like react-native is needed.
@@ -87,6 +91,7 @@ export async function FormPatch(
   options?: RequestInit,
 ): Promise<any> {
   const req = await fetch(url, {
+    ...options,
     method: "PATCH",
     headers: {
       // In react (browser app) is not need headers, but on other app like react-native is needed.

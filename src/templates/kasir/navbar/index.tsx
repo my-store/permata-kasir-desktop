@@ -22,10 +22,10 @@ import { useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
 
 // Navbar Style
-import "../../../styles/templates/user/navbar.style.sass";
+import "../../../styles/templates/kasir/navbar.style.sass";
 
 // Entry Point
-export function UserNavbar(): ReactNode {
+export function KasirNavbar(): ReactNode {
   const navigate = useNavigate();
 
   return (
@@ -37,12 +37,12 @@ export function UserNavbar(): ReactNode {
         <FiMail
           title="Hubungi Kami"
           className="Badges-Btn"
-          onClick={() => navigate("/user/contact")}
+          onClick={() => navigate("/kasir/contact")}
         />
         <FiInfo
           title="Tentang Kami"
           className="Badges-Btn"
-          onClick={() => navigate("/user/about")}
+          onClick={() => navigate("/kasir/about")}
         />
       </div>
     </nav>

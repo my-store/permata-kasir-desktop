@@ -8,12 +8,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 27-Jan-2026
+|  Updated At: 28-Jan-2026
 */
 
 import { SERVER_URL } from "../constants/server.constant";
 import { JSONGet, JSONPost } from "./requests";
 import { Error, Warn } from "./log";
+import { UserLoginData } from "../interfaces/user/login.data.interface";
 
 export const cred_name: string = "permata.kasir.login.credentials";
 
@@ -40,7 +41,7 @@ export async function getUserData(tlp: string, loginData: any): Promise<any> {
   let userData: any = null;
   const getProfileURL: string = `${SERVER_URL}/api/v1/${loginData.role.toLowerCase()}/${tlp}`;
   try {
-    const getUser = await JSONGet(getProfileURL, {
+    const getUser: UserLoginData = await JSONGet(getProfileURL, {
       headers: { Authorization: `Bearer ${loginData.access_token}` },
     });
     if (
@@ -58,7 +59,7 @@ export async function getUserData(tlp: string, loginData: any): Promise<any> {
       userData = { ...loginData };
     } else {
       Warn(
-        `Data ${loginData.role} tidak valid:\nField yang dibutuhkan: [nama, tlp, foto, createdAt, updatedAt]\nField dari server: ${Object.keys(getUser)}`,
+        `Data ${loginData.role} tidak valid:\nField yang dibutuhkan: [nama, tlp, foto, createdAt, updatedAt]\nField dari server: ${JSON.stringify(getUser)}`,
       );
     }
   } catch (error) {
@@ -94,7 +95,7 @@ export async function getAuthProfile(access_token: string): Promise<any> {
     // Invalid login profile
     else {
       Warn(
-        `Profile login tidak valid:\nField yang dibutuhkan: [iat, exp, sub, role]\nField dari server: ${Object.keys(getProfile)}`,
+        `Profile login tidak valid:\nField yang dibutuhkan: [iat, exp, sub, role]\nField dari server: ${JSON.stringify(getProfile)}`,
       );
     }
   } catch (error) {
@@ -104,12 +105,23 @@ export async function getAuthProfile(access_token: string): Promise<any> {
   return profile;
 }
 
-export async function refreshToken(tlp: string): Promise<boolean> {
+export async function refreshToken(params: {
+  access_token: string;
+  refresh_token: string;
+  data: {
+    tlp: string;
+  };
+}): Promise<boolean> {
+  const { access_token, refresh_token, data } = params;
   let tokenRefreshed: any = false;
   try {
     // Melakukan permintaan ke server untuk dibuatkan token baru
     const rt = await JSONPost(`${SERVER_URL}/api/v1/auth/refresh`, {
-      body: JSON.stringify({ tlp }),
+      body: JSON.stringify({
+        access_token,
+        refresh_token,
+        tlp: data.tlp,
+      }),
     });
     // Jika refresh token berhasil dibuat, maka response dari server
     // adalah sama dengan ketika login yaitu berisi:
@@ -121,7 +133,7 @@ export async function refreshToken(tlp: string): Promise<boolean> {
     // server akan mencari tahu siapa yang sedang login.
     if (rt.access_token && rt.refresh_token && rt.role) {
       // Get user data
-      const userData = await getUserData(tlp, rt);
+      const userData = await getUserData(data.tlp, rt);
 
       // User is still exists (not deleted)
       if (userData) {
@@ -146,7 +158,7 @@ export async function refreshToken(tlp: string): Promise<boolean> {
     // Invalid token field from server
     else {
       Warn(
-        `Login token tidak valid:\nField yang dibutuhkan [access_token, refresh_token, role]\nField yang diberikan server: [${rt}]`,
+        `Login token tidak valid:\nField yang dibutuhkan [access_token, refresh_token, role]\nField yang diberikan server: [${JSON.stringify(rt)}]`,
       );
     }
   } catch (error) {

@@ -8,7 +8,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 27-Jan-2026
+|  Updated At: 28-Jan-2026
 */
 
 // Node Modules
@@ -174,7 +174,7 @@ export function Loginpage() {
       // Token expired
       else {
         // Refresh token
-        const tokenRefreshed = await refreshToken(savedCred.data.tlp);
+        const tokenRefreshed = await refreshToken(savedCred);
 
         // Token is refreshed
         if (tokenRefreshed) {
@@ -191,7 +191,8 @@ export function Loginpage() {
       }
     }
 
-    // Everything's ok - Set login ready = true
+    // No token or refresh token is valid - Set login ready = true
+    // to open login page.
     dispatch(setLoginReady(true));
 
     // Remove loading animation after 3 second
@@ -199,7 +200,10 @@ export function Loginpage() {
   }
 
   useEffect(() => {
-    load();
+    // Cleanup function
+    return () => {
+      load();
+    };
   }, []);
 
   // Still not ready (isReady=false), but isLogin=true,
