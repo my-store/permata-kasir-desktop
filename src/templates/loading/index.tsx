@@ -7,13 +7,14 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 27-Jan-2026
+|  Updated At: 29-Jan-2026
 */
 
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
-import { Riple, Atom } from "react-loading-indicators";
+import { Mosaic, Atom } from "react-loading-indicators";
 import "../../styles/templates/loading.style.sass";
 import { useSelector } from "react-redux";
+import { CSSProperties } from "react";
 
 type Easing =
   | "ease-in"
@@ -37,14 +38,13 @@ interface LoadingInterface {
 }
 
 interface ContentLoadingInterface extends LoadingInterface {
-  width: string;
-  height: string;
+  style?: CSSProperties;
 }
 
 function setDefaultLoadingConfig(props: LoadingInterface): LoadingInterface {
   let { color, size, text, textColor, easing } = props;
 
-  if (!color) color = "#97f3ff";
+  if (!color) color = "#72dac3";
   if (!size) size = "medium";
   if (!textColor) textColor = color;
   // if (!text) text = "Mohon tungu";
@@ -54,11 +54,10 @@ function setDefaultLoadingConfig(props: LoadingInterface): LoadingInterface {
 }
 
 export function ContentLoading(props: ContentLoadingInterface) {
-  let { color, size, textColor } = setDefaultLoadingConfig(props);
-  const { width, height } = props;
+  const { color, size, textColor } = setDefaultLoadingConfig(props);
   return (
-    <div id="Content-Loading-Container" style={{ width, height }}>
-      <Riple color={color} size={size} textColor={textColor} />
+    <div id="Content-Loading-Container" style={props.style}>
+      <Mosaic color={color} size={size} textColor={textColor} />
     </div>
   );
 }
