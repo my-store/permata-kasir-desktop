@@ -1,9 +1,19 @@
+/* ===========================================================
+|  SELURUH KONFIGURASI HALAMAN USER
+|  ===========================================================
+|  Jangan lupa untuk memperbarui dokumen ini
+|  jika ada perubahan atau penambahan fitur baru.
+|  -----------------------------------------------------------
+|  Created At: 19-Jan-2026
+|  Updated At: 30-Jan-2026
+*/
+
 // Libraries
 import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
 import { rootRemoveLoading } from "../../../lib/redux/reducers/root.reducer";
 
 // Node Modules
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import $ from "jquery";
 
@@ -16,6 +26,12 @@ import "../../../styles/pages/user.style.sass";
 
 // Socket object inside main.tsx
 import { socket } from "../../../main";
+
+// Functions
+import { userSocketListener } from "./_func";
+
+// User Entrypoint page
+import UserEntrypoint from "./entrypoint";
 
 // Default pages
 import { Contactpage } from "../../contactpage";
@@ -33,19 +49,13 @@ import { Jasa } from "./jasa";
 import { Bank } from "./bank";
 import { Toko } from "./toko";
 
-// User Root Page | Entrypoint
-function Entrypoint(): ReactNode {
-  return <h1>Halaman User</h1>;
-}
-
 function UserGlobalTemplates({ children, socketConnect }: any) {
   const dispatch = useDispatch();
 
-  function socketListener() {}
-
   // When the page is loaded or refreshed
   async function load() {
-    socketListener();
+    // Listen to incoming socket event
+    userSocketListener();
 
     // After 3 seconds remove loading animation
     setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
@@ -85,7 +95,7 @@ export const UserRoutes: any[] = [
     path: "/user",
     element: (props: any) => (
       <UserGlobalTemplates {...props}>
-        <Entrypoint />
+        <UserEntrypoint />
       </UserGlobalTemplates>
     ),
   },

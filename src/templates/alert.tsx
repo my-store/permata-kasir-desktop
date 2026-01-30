@@ -7,13 +7,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 30-Jan-2026
 */
 
-import { removeAlert } from "../../lib/redux/reducers/alert.reducer";
-import { ReduxRootStateType } from "../../lib/redux/store.redux";
+import { removeAlert } from "../lib/redux/reducers/alert.reducer";
+import { ReduxRootStateType } from "../lib/redux/store.redux";
 import { useDispatch, useSelector } from "react-redux";
-import "../../styles/templates/alert.style.sass";
+import "../styles/templates/alert.style.sass";
 
 export default function Alert() {
   const alertState = useSelector((state: ReduxRootStateType) => state.alert);

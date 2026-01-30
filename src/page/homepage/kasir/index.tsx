@@ -1,15 +1,20 @@
+/* ===========================================================
+|  SELURUH KONFIGURASI HALAMAN KASIR
+|  ===========================================================
+|  Jangan lupa untuk memperbarui dokumen ini
+|  jika ada perubahan atau penambahan fitur baru.
+|  -----------------------------------------------------------
+|  Created At: 19-Jan-2026
+|  Updated At: 30-Jan-2026
+*/
+
 // Libraries
 import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
-import { removeLoginCredentials } from "../../../lib/system/credentials";
-import { logout } from "../../../lib/redux/reducers/login.reducer";
 
 // Node Modules
-import {
-  rootRemoveLoading,
-  rootOpenLoading,
-} from "../../../lib/redux/reducers/root.reducer";
-import { ReactNode, useEffect } from "react";
+import { rootRemoveLoading } from "../../../lib/redux/reducers/root.reducer";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import $ from "jquery";
 
 // Kasir Style
@@ -18,25 +23,15 @@ import "../../../styles/pages/kasir.style.sass";
 // Socket object inside main.tsx
 import { socket } from "../../../main";
 
-// Kasir Root Page | Entrypoint
-function Entrypoint(): ReactNode {
-  const dispatch = useDispatch();
-  return (
-    <div id="Kasir-Page">
-      <h1>Halaman Kasir</h1>
-      <button
-        onClick={() => {
-          removeLoginCredentials();
-          dispatch(rootOpenLoading());
-          dispatch(logout());
-          socket.disconnect();
-        }}
-      >
-        Keluar
-      </button>
-    </div>
-  );
-}
+// Kasir Entrypoint page
+import KasirEntrypoint from "./entrypoint";
+
+// Default pages
+import { Contactpage } from "../../contactpage";
+import { Aboutpage } from "../../aboutpage";
+
+// Other kasir pages
+import MesinKasir from "./mesin";
 
 function KasirGlobalTemplates({ children, socketConnect }: any) {
   const dispatch = useDispatch();
@@ -79,7 +74,31 @@ export const KasirRoutes: any[] = [
     path: "/kasir",
     element: (props: any) => (
       <KasirGlobalTemplates {...props}>
-        <Entrypoint />
+        <KasirEntrypoint />
+      </KasirGlobalTemplates>
+    ),
+  },
+  {
+    path: "/kasir/mesin",
+    element: (props: any) => (
+      <KasirGlobalTemplates {...props}>
+        <MesinKasir />
+      </KasirGlobalTemplates>
+    ),
+  },
+  {
+    path: "/kasir/contact",
+    element: (props: any) => (
+      <KasirGlobalTemplates {...props}>
+        <Contactpage />
+      </KasirGlobalTemplates>
+    ),
+  },
+  {
+    path: "/kasir/about",
+    element: (props: any) => (
+      <KasirGlobalTemplates {...props}>
+        <Aboutpage />
       </KasirGlobalTemplates>
     ),
   },

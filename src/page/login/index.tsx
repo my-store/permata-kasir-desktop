@@ -8,11 +8,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 28-Jan-2026
+|  Updated At: 30-Jan-2026
 */
 
 // Node Modules
 import { useDispatch, useSelector } from "react-redux";
+import { AxiosError, isAxiosError } from "axios";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import $ from "jquery";
@@ -21,7 +22,6 @@ import $ from "jquery";
 import { APP_PAGE_LOADING_DELAY } from "../../lib/constants/app.constant";
 import { openAlert } from "../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
-import { JSONPost } from "../../lib/system/requests";
 import { findParams } from "../../lib/system/url";
 import {
   finishWaitLogin,
@@ -33,16 +33,11 @@ import {
   rootRemoveLoading,
   rootOpenLoading,
 } from "../../lib/redux/reducers/root.reducer";
-import {
-  LOGIN_APP_NAME,
-  SERVER_URL,
-} from "../../lib/constants/server.constant";
+import api from "../../lib/system/api";
 import {
   setLoginCredentials,
   getLoginCredentials,
-  getAuthProfile,
   refreshToken,
-  getUserData,
 } from "../../lib/system/credentials";
 
 // Login Style
@@ -53,6 +48,7 @@ import ScienceBg from "../../assets/images/science.png";
 
 // Sounds
 import errorAudio from "../../assets/sounds/error.mp3";
+import { AUTH_URL } from "../../lib/constants/server.constant";
 // Initialize error sound
 const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
@@ -102,7 +98,7 @@ export function Loginpage() {
     const password: any = $("#Loginpage #password").val();
 
     // Extra data (security update 27-Jan-2026)
-    const app_name: string = LOGIN_APP_NAME;
+    const app_name: string = "Permata-Kasir-Client-Desktop";
 
     // No data is presented
     if (tlp.length < 1 || password.length < 1) {
@@ -110,41 +106,52 @@ export function Loginpage() {
       return failed("Mohon isi seluruh data");
     }
 
-    // Mengirim request ke API
-    let logReq: any;
+    // Send login request and get the user data
+    let loginData: any;
+    let userData: any;
     try {
-      logReq = await JSONPost(`${SERVER_URL}/api/v1/auth`, {
-        body: JSON.stringify({ tlp, password, app_name }),
+      // Send login request
+      const loginReq = await api.post(AUTH_URL, {
+        tlp,
+        password,
+        app_name,
       });
+      loginData = loginReq.data;
+
+      // Get user data
+      const getUserReq = await api.get(
+        `/api/v1/${loginData.role.toLowerCase()}/${tlp}`,
+        {
+          headers: {
+            Authorization: `Bearer ${loginData.access_token}`,
+          },
+        },
+      );
+      userData = getUserReq.data;
     } catch (error) {
-      // Terminate task - Terjadi kesalahan saat mengirim request ke server
-      return failed(`${error}`);
-    }
+      // Axios error
+      if (isAxiosError(error)) {
+        const axiosErr = error as AxiosError;
+        // Get message from server
+        const { message }: any = axiosErr.response?.data;
+        if (message) {
+          // Display message from server
+          return failed(`${message}`); // Terminate task
+        }
+      }
 
-    // Tlp atau password salah, akun belum di aktivasi atau mungkin di banned.
-    if (logReq.message) {
-      // Terminate task - Tampilkan pesan error dari server
-      return failed(logReq.message);
-    }
-
-    // Get login profile
-    const userData = await getUserData(tlp, logReq);
-
-    // No user data is founded
-    if (!userData) {
-      // Terminate task and display the error message
-      return failed("Data user tidak ditemukan");
+      // Display other error
+      return failed(`${error}`); // Terminate task
     }
 
     // Re-open loading animation
     dispatch(rootOpenLoading());
 
     // Create login credentials on local storage
-    const loginData = { ...logReq, data: userData };
-    setLoginCredentials(loginData);
+    setLoginCredentials({ ...loginData, data: userData });
 
     // Set login data
-    dispatch(login(logReq.role));
+    dispatch(login(loginData.role));
 
     // Close from login-wait state
     dispatch(finishWaitLogin());
@@ -160,37 +167,47 @@ export function Loginpage() {
   async function load() {
     // Login token checking ...
     const savedCred = getLoginCredentials();
+
     // Login data is founded in local storage
     if (savedCred) {
-      // Check login-profile
-      const profile = await getAuthProfile(savedCred.access_token);
+      // Jika token expired, response dari server adalah:
+      // message dan statusCode.
+      // message = Unauthorized
+      // statusCode = 401
+      // ----------------------------------------------------
+      // Namun jika token masih aktif, response server adalah:
+      // [iat, exp, sub, role]
+      // iat = Issued At (where the token is created)
+      // exp = Expired
+      // sub = No Tlp. User/Kasir
+      // role = User/Kasir
+      try {
+        // Check is token still active
+        await api.get(AUTH_URL, {
+          headers: { Authorization: `Bearer ${savedCred.access_token}` },
+        });
 
-      // Token still active
-      if (profile) {
-        // Terminate process, and force to open home-page (user | kasir)
+        // Redirect to homepage, if token still active
         return redirectToHomepage(savedCred.role);
-      }
+      } catch {}
 
       // Token expired
-      else {
+      try {
         // Refresh token
-        const tokenRefreshed = await refreshToken(savedCred);
+        const tokenRefreshed: boolean = await refreshToken(savedCred);
 
-        // Token is refreshed
+        // Token refresh successfully
         if (tokenRefreshed) {
-          // Ambil token yang barusaja direfresh
-          // Metode ini dilakukan untuk mengantisipasi jika data login
-          // sebelumnya adalah user berubah menjadi kasir atau sebaliknya.
-          // Jadi ambil role terbaru berdasarkan yang diberikan oleh server.
-          // Untuk menentukan halaman mana yang harus diberikan.
-          const newToken = getLoginCredentials();
+          // Get new credentials
+          const newCred = getLoginCredentials();
 
-          // Terminate process, and force to open home-page (user | kasir)
-          return redirectToHomepage(newToken.role);
+          // Redirect to home-page (user | kasir)
+          return redirectToHomepage(newCred.role);
         }
-      }
+      } catch {}
     }
 
+    // LOGIN CHECK IS FINISHED
     // No token or refresh token is valid - Set login ready = true
     // to open login page.
     dispatch(setLoginReady(true));
