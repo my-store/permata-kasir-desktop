@@ -49,6 +49,7 @@ import ScienceBg from "../../assets/images/science.png";
 // Sounds
 import errorAudio from "../../assets/sounds/error.mp3";
 import { AUTH_URL } from "../../lib/constants/server.constant";
+import { useQuery } from "@tanstack/react-query";
 // Initialize error sound
 const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
@@ -159,7 +160,9 @@ export function Loginpage() {
     dispatch(login(role));
   }
 
-  async function load() {
+  async function tokenCheck(): Promise<any> {
+    let token: any = null;
+
     // Login token checking ...
     const savedCred = getLoginCredentials();
 
@@ -177,48 +180,50 @@ export function Loginpage() {
       // sub = No Tlp. User/Kasir
       // role = User/Kasir
       try {
-        // Check is token still active
         await get(AUTH_URL, {
           headers: {
             Authorization: `Bearer ${savedCred.access_token}`,
           },
         });
-
-        // Redirect to homepage, if token still active
-        return redirectToHomepage(savedCred.role);
+        // Token is still active
+        token = savedCred;
       } catch {}
 
-      // Token expired
+      // Token expired, refreshing ...
       try {
-        // Refresh token
         const tokenRefreshed: boolean = await refreshToken(savedCred);
-
-        // Token refresh successfully
+        // Token is refreshed
         if (tokenRefreshed) {
-          // Get new credentials
-          const newCred = getLoginCredentials();
-
-          // Redirect to home-page (user | kasir)
-          return redirectToHomepage(newCred.role);
+          token = getLoginCredentials(); // Reload | Get fresh data after refreshing and stored a new token data.
         }
       } catch {}
     }
 
-    // LOGIN CHECK IS FINISHED
-    // No token or refresh token is valid - Set login ready = true
-    // to open login page.
-    dispatch(setLoginReady(true));
-
-    // Remove loading animation after 3 second
-    setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
+    return token;
   }
 
+  const { status, data } = useQuery({
+    queryKey: ["login.checkToken"],
+    queryFn: tokenCheck,
+  });
+
   useEffect(() => {
-    // Cleanup function
-    return () => {
-      load();
-    };
-  }, []);
+    // Token exists, still-active or refreshed
+    if (status == "success" && data) {
+      // Data berisi credentials
+      return redirectToHomepage(data.role);
+    }
+
+    // Token doesn't exist
+    else {
+      // No token or refresh token is valid - Set login ready = true
+      // to open login page.
+      dispatch(setLoginReady(true));
+
+      // Remove loading animation after 3 second
+      setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
+    }
+  }, [status, data]);
 
   // Still not ready (isReady=false), but isLogin=true,
   // redirect to home-page (user | kasir) and also deep URL/ sub url:

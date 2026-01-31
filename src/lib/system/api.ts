@@ -45,6 +45,9 @@ async function ApiErr(error: any, callback: Function, ...args: any) {
     }
   }
 
+  // FIX THIS, When toen is expired, request will receive error in console with code 500,
+  // indicates the server error, maybe access_token length is too long or something.
+
   // Terminate task, display error to try-catch of caller (that call this function)
   throw error;
 }
