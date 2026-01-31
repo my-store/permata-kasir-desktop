@@ -7,35 +7,21 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 29-Jan-2026
+|  Updated At: 31-Jan-2026
 */
 
 // Node Modules
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
 import { ReactNode } from "react";
 
 // Libraries
-import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
-import { SERVER_URL } from "../../../../lib/constants/server.constant";
-import { JSONGet } from "../../../../lib/system/requests";
-import {
-  getLoginCredentials,
-  refreshToken,
-} from "../../../../lib/system/credentials";
+import { ProdukInterface } from "../../../../lib/interfaces/database.interface";
 
 // Templates
 import { ContentLoading } from "../../../../templates/loading";
 
-interface ProdukInterface {
-  id: number;
-  uuid: string;
-  nama: string;
-  hargaPokok: number;
-  hargaJual: number;
-  createdAt: string;
-  updatedAt: string;
-}
+// Templates
+import { getAllProduk } from "./_func";
 
 interface TemplateInterface {
   data: ProdukInterface[];
@@ -75,50 +61,14 @@ function Template({ data, isPending }: TemplateInterface): ReactNode {
 
 // Entry Point
 export function Produk(): ReactNode {
-  const dispatch = useDispatch();
-
-  async function getProduk() {
-    const savedCred = getLoginCredentials();
-    const produk = await JSONGet(`${SERVER_URL}/api/v1/produk`, {
-      headers: { Authorization: `Bearer ${savedCred.access_token}` },
-    });
-
-    if (produk.message) {
-      // Token expired
-      if (produk.message == "Unauthorized") {
-        // Refresh token
-        const tokenRefreshed = await refreshToken(savedCred);
-
-        // Token is refreshed
-        if (tokenRefreshed) {
-          return getProduk();
-        }
-
-        // Error while refreshin token
-        else {
-          // Show alert | Error message
-          throw dispatch(
-            openAlert({
-              type: "Error",
-              title: "Gagal mengambil data",
-              body: "Gagal melakukan refresh-token\nUnauthorized: getProduk()",
-            }),
-          );
-        }
-      }
-    }
-
-    return produk;
-  }
-
   const query = useQuery({
     queryKey: ["user.produk.getAll"],
-    queryFn: getProduk,
+    queryFn: getAllProduk,
   });
 
   return (
     <div id="Produk">
-      <Template data={query.data} isPending={query.isPending} />
+      <Template data={query.data ?? []} isPending={query.isPending} />
     </div>
   );
 }

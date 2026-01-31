@@ -8,7 +8,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 30-Jan-2026
+|  Updated At: 31-Jan-2026
 */
 
 // Node Modules
@@ -33,7 +33,7 @@ import {
   rootRemoveLoading,
   rootOpenLoading,
 } from "../../lib/redux/reducers/root.reducer";
-import api from "../../lib/system/api";
+import { get, post } from "../../lib/system/api";
 import {
   setLoginCredentials,
   getLoginCredentials,
@@ -111,23 +111,18 @@ export function Loginpage() {
     let userData: any;
     try {
       // Send login request
-      const loginReq = await api.post(AUTH_URL, {
+      loginData = await post(AUTH_URL, {
         tlp,
         password,
         app_name,
       });
-      loginData = loginReq.data;
 
       // Get user data
-      const getUserReq = await api.get(
-        `/api/v1/${loginData.role.toLowerCase()}/${tlp}`,
-        {
-          headers: {
-            Authorization: `Bearer ${loginData.access_token}`,
-          },
+      userData = await get(`/api/v1/${loginData.role.toLowerCase()}/${tlp}`, {
+        headers: {
+          Authorization: `Bearer ${loginData.access_token}`,
         },
-      );
-      userData = getUserReq.data;
+      });
     } catch (error) {
       // Axios error
       if (isAxiosError(error)) {
@@ -183,8 +178,10 @@ export function Loginpage() {
       // role = User/Kasir
       try {
         // Check is token still active
-        await api.get(AUTH_URL, {
-          headers: { Authorization: `Bearer ${savedCred.access_token}` },
+        await get(AUTH_URL, {
+          headers: {
+            Authorization: `Bearer ${savedCred.access_token}`,
+          },
         });
 
         // Redirect to homepage, if token still active

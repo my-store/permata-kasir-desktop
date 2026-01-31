@@ -7,34 +7,21 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 29-Jan-2026
+|  Updated At: 31-Jan-2026
 */
 
 // Node Modules
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
 import { ReactNode } from "react";
 
 // Libraries
-import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
-import { SERVER_URL } from "../../../../lib/constants/server.constant";
-import { JSONGet } from "../../../../lib/system/requests";
-import {
-  getLoginCredentials,
-  refreshToken,
-} from "../../../../lib/system/credentials";
+import { JasaInterface } from "../../../../lib/interfaces/database.interface";
 
 // Templates
 import { ContentLoading } from "../../../../templates/loading";
 
-interface JasaInterface {
-  id: number;
-  uuid: string;
-  nama: string;
-  biaya: number;
-  createdAt: string;
-  updatedAt: string;
-}
+// Functions
+import { getAllJasa } from "./_func";
 
 interface TemplateInterface {
   data: JasaInterface[];
@@ -74,50 +61,14 @@ function Template({ data, isPending }: TemplateInterface): ReactNode {
 
 // Entry Point
 export function Jasa(): ReactNode {
-  const dispatch = useDispatch();
-
-  async function getJasa() {
-    const savedCred = getLoginCredentials();
-    const jasa = await JSONGet(`${SERVER_URL}/api/v1/jasa`, {
-      headers: { Authorization: `Bearer ${savedCred.access_token}` },
-    });
-
-    if (jasa.message) {
-      // Token expired
-      if (jasa.message == "Unauthorized") {
-        // Refresh token
-        const tokenRefreshed = await refreshToken(savedCred);
-
-        // Token is refreshed
-        if (tokenRefreshed) {
-          return getJasa();
-        }
-
-        // Error while refreshin token
-        else {
-          // Show alert | Error message
-          throw dispatch(
-            openAlert({
-              type: "Error",
-              title: "Gagal mengambil data",
-              body: "Gagal melakukan refresh-token\nUnauthorized: getJasa()",
-            }),
-          );
-        }
-      }
-    }
-
-    return jasa;
-  }
-
   const query = useQuery({
     queryKey: ["user.jasa.getAll"],
-    queryFn: getJasa,
+    queryFn: getAllJasa,
   });
 
   return (
     <div id="Jasa">
-      <Template data={query.data} isPending={query.isPending} />
+      <Template data={query.data ?? []} isPending={query.isPending} />
     </div>
   );
 }

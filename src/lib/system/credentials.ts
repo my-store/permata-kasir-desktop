@@ -8,12 +8,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 30-Jan-2026
+|  Updated At: 31-Jan-2026
 */
 
 import { AUTH_URL } from "../constants/server.constant";
 import { Error, Warn } from "./log";
-import api from "./api";
+import { get, post } from "./api";
 
 export const cred_name: string = "permata.kasir.login.credentials";
 
@@ -50,12 +50,11 @@ export async function refreshToken(params: {
 
   try {
     // Melakukan permintaan ke server untuk dibuatkan token baru
-    const refreshReq = await api.post(`${AUTH_URL}/refresh`, {
+    rt = await post(`${AUTH_URL}/refresh`, {
       access_token,
       refresh_token,
       tlp: data.tlp,
     });
-    rt = refreshReq.data;
   } catch (error) {
     Error(`Gagal memperbarui token login:\n${JSON.stringify(error)}`);
   }
@@ -72,7 +71,7 @@ export async function refreshToken(params: {
     if (rt.access_token && rt.refresh_token && rt.role) {
       // Get user data
       try {
-        const userDataReq = await api.get(
+        const userData = await get(
           `/api/v1/${rt.role.toLowerCase()}/${data.tlp}`,
           {
             headers: {
@@ -80,7 +79,6 @@ export async function refreshToken(params: {
             },
           },
         );
-        const userData = userDataReq.data;
 
         // Update credentials on local storage
         setLoginCredentials({ ...rt, data: userData });

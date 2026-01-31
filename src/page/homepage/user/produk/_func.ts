@@ -1,17 +1,17 @@
 /* ===========================================================
-|  FUNCTION UNTUK HALAMAN TOKO
+|  FUNCTION UNTUK HALAMAN PRODUK
 |  ===========================================================
 |  Jangan lupa untuk memperbarui dokumen ini
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
-|  Created At: 30-Jan-2026
+|  Created At: 31-Jan-2026
 |  Updated At: 31-Jan-2026
 */
 
 // Libraries
-import { TokoInterface } from "../../../../lib/interfaces/database.interface";
+import { ProdukInterface } from "../../../../lib/interfaces/database.interface";
 import { getLoginCredentials } from "../../../../lib/system/credentials";
-import { TOKO_URL } from "../../../../lib/constants/server.constant";
+import { PRODUK_URL } from "../../../../lib/constants/server.constant";
 import { get } from "../../../../lib/system/api";
 
 // Node Modules
@@ -26,16 +26,16 @@ function config(): AxiosRequestConfig {
   };
 }
 
-export async function getAllToko(): Promise<TokoInterface[]> {
-  return getWhereToko("");
+export async function getAllProduk(): Promise<ProdukInterface[]> {
+  return getWhereProduk("");
 }
 
-export async function getWhereToko(args: string): Promise<TokoInterface[]> {
-  const toko: TokoInterface[] = await get(TOKO_URL + args, config());
-  return toko;
+export async function getWhereProduk(args: string): Promise<ProdukInterface[]> {
+  const produk: ProdukInterface[] = await get(PRODUK_URL + args, config());
+  return produk;
 }
 
-export async function getOneToko(args: string): Promise<TokoInterface> {
-  const toko: TokoInterface = await get(TOKO_URL + args, config());
-  return toko;
+export async function getOneProduk(args: string): Promise<ProdukInterface> {
+  const produk: ProdukInterface = await get(PRODUK_URL + args, config());
+  return produk;
 }
