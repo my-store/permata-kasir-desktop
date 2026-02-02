@@ -13,6 +13,7 @@
 
 // Node Modules
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -20,8 +21,11 @@ import $ from "jquery";
 
 // Libraries
 import { APP_PAGE_LOADING_DELAY } from "../../lib/constants/app.constant";
+import { UserInterface } from "../../lib/interfaces/database.interface";
+import { TokenInterface } from "../../lib/interfaces/api.interface";
 import { openAlert } from "../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
+import { AUTH_URL } from "../../lib/constants/server.constant";
 import { findParams } from "../../lib/system/url";
 import {
   finishWaitLogin,
@@ -49,7 +53,7 @@ import ScienceBg from "../../assets/images/science.png";
 
 // Sounds
 import errorAudio from "../../assets/sounds/error.mp3";
-import { AUTH_URL } from "../../lib/constants/server.constant";
+
 // Initialize error sound
 const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
@@ -108,8 +112,8 @@ export function Loginpage() {
     }
 
     // Send login request and get the user data
-    let loginData: any;
-    let userData: any;
+    let loginData: TokenInterface;
+    let userData: UserInterface;
     try {
       // Send login request
       loginData = await post(AUTH_URL, {
@@ -160,7 +164,9 @@ export function Loginpage() {
     dispatch(login(role));
   }
 
-  async function tokenCheck(): Promise<void> {
+  async function tokenCheck(): Promise<any> {
+    let token: any = null;
+
     // Login token checking ...
     const savedCred = getLoginCredentials();
 
@@ -179,42 +185,47 @@ export function Loginpage() {
       // role = User/Kasir
       try {
         await get(AUTH_URL, {
-          headers: {
-            Authorization: `Bearer ${savedCred.access_token}`,
-          },
+          headers: { Authorization: `Bearer ${savedCred.access_token}` },
         });
-        // Token is still active, redirect to homepage (user | kasir)
-        return redirectToHomepage(savedCred.role);
+        // Token still alive
+        token = savedCred;
       } catch {
         // Token expired, refreshing ...
         try {
-          const tokenRefreshed: boolean = await refreshToken(savedCred);
-          // Token is refreshed
-          if (tokenRefreshed) {
-            // Reload | Get fresh data after refreshing and stored a new token data.
-            const newSavedCred = getLoginCredentials();
-            // Token is refreshed, redirect to homepage (user | kasir)
-            return redirectToHomepage(newSavedCred.role);
-          }
+          await refreshToken(savedCred);
+          // Token is successfully refreshed
+          token = getLoginCredentials(); // Get refreshed login credentials
         } catch {
-          // Failed to refresh token, remove saved token (IMPORTANT to remove the old token)
+          // Error while refreshing token
+          // Remove saved token (IMPORTANT to remove the old token)
           removeLoginCredentials();
         }
       }
     }
 
-    // Token expired, or no token exist
-    // Set login ready = true, to display login page.
-    dispatch(setLoginReady(true));
-    // Remove loading animation after 3 second
-    setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
+    return token;
   }
 
+  const { status, data } = useQuery({
+    queryKey: ["login.token.checking"],
+    queryFn: tokenCheck,
+  });
+
   useEffect(() => {
-    return () => {
-      tokenCheck();
-    };
-  }, []);
+    if (status == "success" && data) {
+      // Token still active or refreshed, redirect to homepage (user | kasir)
+      return redirectToHomepage(data.role);
+    }
+
+    // Token expired, or no token exist
+    else {
+      // Set login ready = true, to display login page.
+      dispatch(setLoginReady(true));
+
+      // Remove loading animation after 3 second
+      setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
+    }
+  }, [status, data]);
 
   // Still not ready (isReady=false), but isLogin=true,
   // redirect to home-page (user | kasir) and also deep URL/ sub url:

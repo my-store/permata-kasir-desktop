@@ -10,35 +10,44 @@
 |  Updated At: 2-Feb-2026
 */
 
-import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
+import axios, { AxiosRequestConfig, AxiosInstance, AxiosError } from "axios";
+import { getLoginCredentials, refreshToken } from "./credentials";
 import { SERVER_URL } from "../constants/server.constant";
+import { Error } from "./log";
 
 // Axios Instance
 const api: AxiosInstance = axios.create({ baseURL: SERVER_URL });
 
-// // Error handler
-// async function ApiErr(error: any, callback: Function, ...args: any) {
-//   // Axios error
-//   if (isAxiosError(error)) {
-//     const axiosErr = error as AxiosError;
-//     // Get message from server
-//     const { message }: any = axiosErr.response?.data;
-//     // Token expired
-//     if (message && message == "Unauthorized") {
-//       // Get the login credentials
-//       const savedCred = getLoginCredentials();
-//       // Make sure the token is exist
-//       if (savedCred) {
-//         // Refresh token
-//         const tokenRefreshed = await refreshToken(savedCred);
-//         // Token is refreshed
-//         if (tokenRefreshed) {
-//           return callback(...args);
-//         }
-//       }
-//     }
-//   }
-// }
+interface cbInterface {
+  func: Function;
+  args: any[];
+}
+
+export function afterSignedInErrorHandler(err: any, cb: cbInterface): any {
+  const axiosErr = err as AxiosError;
+  const { message }: any = axiosErr.response?.data;
+
+  // Token expired
+  if (message == "Unauthorized") {
+    // Return to callback and their args
+    // Call unauthorized handler, and pass cb with their args
+    return unauthorizedHandler(cb.func, cb.args);
+  }
+
+  // Display other error (non-axios error)
+  Error("Unknown-Error:\n" + axiosErr.message);
+}
+
+export async function unauthorizedHandler(cb: Function, args: any[]) {
+  // Refresh token
+  try {
+    const oldCred: any = getLoginCredentials();
+    await refreshToken(oldCred);
+    cb(...args);
+  } catch (err) {
+    Error(`Gagal melakukan pembaruan token:\n${err}`);
+  }
+}
 
 // Get Request
 export async function get(

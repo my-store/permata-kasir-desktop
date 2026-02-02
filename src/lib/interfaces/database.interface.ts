@@ -1,3 +1,25 @@
+export interface UserInterface {
+  id: number;
+  uuid: string;
+  nama: string;
+  alamat: string;
+  tlp: string;
+  foto: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface KasirInterface {
+  id: number;
+  uuid: string;
+  nama: string;
+  alamat: string;
+  tlp: string;
+  foto: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface TokoInterface {
   id: number;
   uuid: string;
