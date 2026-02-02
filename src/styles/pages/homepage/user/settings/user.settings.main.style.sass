@@ -1,0 +1,75 @@
+@use "../../../../root-function" as *
+@use "../../../../root-mixin" as *
+@use "../../../../root-vars" as *
+@use "../../../../user-vars" as *
+
+#User
+    .Settings
+        @include flex-just-center
+        background-color: semi-transparent(#000, 0.2)
+        height: $window-height
+        width: 100%
+        position: fixed
+        left: 0
+        top: 0
+        z-index: 3
+        // Blur the container only
+        backdrop-filter: blur(10px)
+
+        #Box
+            @include shadow
+            height: 75vh
+            width: 70vw
+            background-color: $primary-color
+            border-radius: 0.4rem
+            overflow: hidden
+
+            #Header
+                @include flex-just-space-between
+                @include padxy(0.2rem, 0.5rem, 0.2rem, 0.5rem)
+                @include shadow
+                position: relative
+                z-index: 1
+                width: 100%
+                background-color: $primary-color
+                border-bottom: 1px solid #eee
+                color: #eee
+
+                #Label
+                    font-size: 1rem
+
+                #Close-Btn
+                    cursor: pointer
+
+                    &:hover
+                        opacity: .7
+
+            #Body
+                @include padxy(0.2rem, 0.3rem, 1rem, 0.3rem)
+
+                #Tab
+                    width: 100%
+                    height: 69vh
+                    background-color: #eee
+                    border-radius: 0 0 0.5rem 0.5rem
+
+                    #Buttons-Container
+                        @include padxy(0.2rem, 0, 0, 0)
+                        @include flex-center
+                        background-color: $primary-color
+
+                        .Btn
+                            @include padx(0.4rem)
+                            cursor: pointer
+                            color: #eee
+
+                            &:hover
+                                opacity: 0.8
+
+                            &:is(.Active)
+                                color: #000
+                                border-radius: 0.3rem 0.3rem 0 0
+                                background-color: #eee
+
+                #Contents
+                    @include padxy(0.2rem, 0.4rem, 0.2rem, 0.4rem)

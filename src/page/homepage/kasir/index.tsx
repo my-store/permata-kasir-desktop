@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 30-Jan-2026
+|  Updated At: 2-Feb-2026
 */
 
 // Libraries
@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import $ from "jquery";
 
 // Kasir Style
-import "../../../styles/pages/kasir.style.sass";
+import "../../../styles/pages/homepage/kasir/kasir.main.style.sass";
 
 // Socket object inside main.tsx
 import { socket } from "../../../main";

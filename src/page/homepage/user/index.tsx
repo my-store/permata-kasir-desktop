@@ -5,24 +5,27 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 30-Jan-2026
+|  Updated At: 2-Feb-2026
 */
 
 // Libraries
 import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
 import { rootRemoveLoading } from "../../../lib/redux/reducers/root.reducer";
+import { ReduxRootStateType } from "../../../lib/redux/store.redux";
 
 // Node Modules
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import $ from "jquery";
 
-// Templates
-import { UserNavbar } from "../../../templates/user/navbar";
-import { UserSidebar } from "../../../templates/user/sidebar";
+// Navbar
+import { UserNavbar } from "./user.navbar";
+
+// Sidebar
+import { UserSidebar } from "./user.sidebar";
 
 // User Style
-import "../../../styles/pages/user.style.sass";
+import "../../../styles/pages/homepage/user/user.main.style.sass";
 
 // Socket object inside main.tsx
 import { socket } from "../../../main";
@@ -49,7 +52,13 @@ import { Jasa } from "./jasa";
 import { Bank } from "./bank";
 import { Toko } from "./toko";
 
+// User Settings
+import { UserSettings } from "./settings";
+
 function UserGlobalTemplates({ children, socketConnect }: any) {
+  const settingsState = useSelector(
+    (state: ReduxRootStateType) => state.user_settings,
+  );
   const dispatch = useDispatch();
 
   // When the page is loaded or refreshed
@@ -86,6 +95,7 @@ function UserGlobalTemplates({ children, socketConnect }: any) {
       <UserNavbar />
       <UserSidebar />
       {children}
+      {settingsState.opened && <UserSettings />}
     </div>
   );
 }

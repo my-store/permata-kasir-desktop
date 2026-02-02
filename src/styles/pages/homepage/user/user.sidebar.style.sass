@@ -1,0 +1,84 @@
+@use "../../../root-mixin" as *
+@use "../../../root-vars" as *
+@use "../../../user-vars" as *
+
+#User
+    #Sidebar
+        @include flex-center(column)
+        height: $window-height
+        width: $sidebar-width
+        background-color: $sidebar-bg
+        position: fixed
+        left: 0px
+        top: 0px
+        z-index: 2
+
+        #Profile
+            @include flex-just-center(column)
+            padding: 0.7rem 0 0 0
+            color: #eee
+            margin-top: $navbar-height
+            background-color: $primary-color
+            width: 100%
+
+            #Image-Container
+                // Out container shadow
+                @include shadow
+
+                border-radius: 50%
+
+                #Image
+                    border-radius: 50%
+                    width: $sidebar-width - 2rem
+                    height: $sidebar-width - 2rem
+                    background-color: #eee
+
+                    background-repeat: no-repeat
+                    background-position: center
+                    background-size: cover
+
+                    // Inset (inner) border styles
+                    border: 4px solid rgb(255, 255, 255)
+                    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.70) inset
+                    -webkit-box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.70) inset
+                    -moz-box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.70) inset
+
+            #Info
+                @include pady(0.5rem)
+                width: 100%
+                text-align: center
+
+                #Name
+                    font-size: 1rem
+                    font-weight: 600
+
+                #Phone
+                    font-size: 0.8rem
+
+        #User-Button-Container, #System-Button-Container
+            width: 100%
+
+            &:is(#User-Button-Container)
+                padding: 0.3rem 0 0.3rem 0
+                flex: 1
+
+            &:is(#System-Button-Container)
+                padding: 0.2rem 0 0.2rem 0
+                background-color: $primary-color
+
+            .Btn-Container
+                @include flex-center
+                @include padx(0.3rem)
+                width: 100%
+
+                button
+                    @include rm-def-btn-styles
+                    font-size: 0.9rem
+                    cursor: pointer
+                    text-align: left
+                    color: #eee
+                    line-height: 1.6rem
+                    margin-left: 0.5rem
+
+                    &:hover
+                        color: $sidebar-button-hover-color

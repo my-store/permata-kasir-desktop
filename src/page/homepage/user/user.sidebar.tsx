@@ -6,8 +6,8 @@
 |  Jangan lupa untuk memperbarui dokumen ini
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
-|  Created At: 19-Jan-2026
-|  Updated At: 27-Jan-2026
+|  Created At: 2-Feb-2026
+|  Updated At: 2-Feb-2026
 */
 
 // Node Modules
@@ -37,17 +37,21 @@ import {
 } from "../../../lib/system/credentials";
 
 // Sidebar Style
-import "../../../styles/templates/user/sidebar.style.sass";
+import "../../../styles/pages/homepage/user/user.sidebar.style.sass";
 
 // Socket object inside main.tsx
 import { socket } from "../../../main";
 import { MdDiscount } from "react-icons/md";
 import { SERVER_URL } from "../../../lib/constants/server.constant";
+import { openUserSettings } from "../../../lib/redux/reducers/user/settings.reducer";
 
 // Entry Point
 export function UserSidebar(): ReactNode {
-  const userLoginDataState = useSelector(
+  const loginDataState = useSelector(
     (state: ReduxRootStateType) => state.user_login_data,
+  );
+  const settingsState = useSelector(
+    (state: ReduxRootStateType) => state.user_settings,
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -82,13 +86,13 @@ export function UserSidebar(): ReactNode {
           <div
             id="Image"
             style={{
-              backgroundImage: `url(${SERVER_URL}/static/${userLoginDataState.data?.foto})`,
+              backgroundImage: `url(${SERVER_URL}/static/${loginDataState.data?.foto})`,
             }}
           ></div>
         </div>
         <div id="Info">
-          <p id="Name">{userLoginDataState.data?.nama}</p>
-          <p id="Phone">{userLoginDataState.data?.tlp}</p>
+          <p id="Name">{loginDataState.data?.nama}</p>
+          <p id="Phone">{loginDataState.data?.tlp}</p>
         </div>
       </div>
 
@@ -175,7 +179,9 @@ export function UserSidebar(): ReactNode {
       <div id="System-Button-Container">
         <div className="Btn-Container">
           <IoSettingsSharp size={"1.1rem"} color="#eee" />
-          <button>Pengaturan</button>
+          <button onClick={() => dispatch(openUserSettings())}>
+            Pengaturan
+          </button>
         </div>
         <div className="Btn-Container">
           <ImExit size={"1.1rem"} color="#eee" />

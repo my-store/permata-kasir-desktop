@@ -1,36 +1,35 @@
-#Page-Container
-  // Content | Section Loading
-  #Content-Loading-Container
+// Content Loading
+#Content-Loading-Container
+  display: flex
+  align-items: center
+  justify-content: center
+
+// Root Loading
+.Page-Loading-Container
+  width: 100%
+  height: 100vh
+
+  visibility: hidden
+  opacity: 0
+
+  position: fixed
+  left: 0px
+  top: 0px
+  z-index: 4
+
+  background-size: cover
+  background-position: center
+  background-repeat: no-repeat
+
+  #Page-Loading-Box
+    width: 100%
+    height: 100vh
+    background-color: rgba($color: #000000, $alpha: 0.4)
+
     display: flex
     align-items: center
     justify-content: center
 
-  // Root Loading
-  .Page-Loading-Container
-    width: 100%
-    height: 100vh
-
-    visibility: hidden
-    opacity: 0
-
-    position: fixed
-    left: 0px
-    top: 0px
-    z-index: 3
-
-    background-size: cover
-    background-position: center
-    background-repeat: no-repeat
-
-    #Page-Loading-Box
-      width: 100%
-      height: 100vh
-      background-color: rgba($color: #000000, $alpha: 0.4)
-
-      display: flex
-      align-items: center
-      justify-content: center
-
-  .Page-Loading-Container-Active
-    visibility: visible
-    opacity: 1
+.Page-Loading-Container-Active
+  visibility: visible
+  opacity: 1

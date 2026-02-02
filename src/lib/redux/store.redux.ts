@@ -7,11 +7,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 19-Jan-2026
+|  Updated At: 2-Feb-2026
 */
 
 // Reducers
 import UserLoginDataReducer from "./reducers/user/login.data.reducer";
+import UserSettingsReducer from "./reducers/user/settings.reducer";
 import AlertReducer from "./reducers/alert.reducer";
 import LoginReducer from "./reducers/login.reducer";
 import RootReducer from "./reducers/root.reducer";
@@ -27,6 +28,7 @@ export const store = configureStore({
     alert: AlertReducer,
 
     user_login_data: UserLoginDataReducer,
+    user_settings: UserSettingsReducer,
   },
 });
 

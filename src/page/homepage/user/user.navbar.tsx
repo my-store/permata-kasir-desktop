@@ -1,19 +1,13 @@
 /* ===========================================================
 |  TOP NAVBAR
 |  ===========================================================
-|  Disini berisi beberapa komponen seperti:
-|  1. Brand "Permata Kasir"
-|  2. Link bawaan aplikasi diantaranya link menuju halaman:
-|     - Tentang Kami
-|     - Hubungi Kami
-|  3. Pemberitahuan
-|  4. Tombol Logout
+|  Disini berisi beberapa komponen paling atas pada aplikasi.
 |  -----------------------------------------------------------
 |  Jangan lupa untuk memperbarui dokumen ini
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
-|  Created At: 19-Jan-2026
-|  Updated At: 27-Jan-2026
+|  Created At: 2-Feb-2026
+|  Updated At: 2-Feb-2026
 */
 
 // Node Modules
@@ -22,10 +16,10 @@ import { useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
 
 // Navbar Style
-import "../../../styles/templates/kasir/navbar.style.sass";
+import "../../../styles/pages/homepage/user/user.navbar.style.sass";
 
 // Entry Point
-export function KasirNavbar(): ReactNode {
+export function UserNavbar(): ReactNode {
   const navigate = useNavigate();
 
   return (
@@ -37,12 +31,12 @@ export function KasirNavbar(): ReactNode {
         <FiMail
           title="Hubungi Kami"
           className="Badges-Btn"
-          onClick={() => navigate("/kasir/contact")}
+          onClick={() => navigate("/user/contact")}
         />
         <FiInfo
           title="Tentang Kami"
           className="Badges-Btn"
-          onClick={() => navigate("/kasir/about")}
+          onClick={() => navigate("/user/about")}
         />
       </div>
     </nav>

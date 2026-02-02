@@ -1,0 +1,33 @@
+@use "../../../root-vars" as *
+@use "../../../user-vars" as *
+@use "../../../root-mixin" as *
+
+#User
+    #Navbar
+        @include flex-just-space-between()
+        @include padx(0.3rem)
+        @include shadow
+        width: $window-width
+        background-color: $navbar-bg
+        height: $navbar-height
+        border-bottom: 0.1rem solid #eee
+        color: #eee
+        position: fixed
+        left: 0px
+        top: 0px
+        z-index: 3
+
+        #App-Name
+            font-size: 0.9rem
+
+        #Top-Badges
+            @include flex-center()
+
+            .Badges-Btn
+                cursor: pointer
+
+                &:not(:nth-child(1))
+                    margin-left: 0.5rem
+
+                &:hover
+                    opacity: 0.8
