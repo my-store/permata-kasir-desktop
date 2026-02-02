@@ -15,6 +15,7 @@ import { RefreshTokenInterface } from "../interfaces/api.interface";
 import { AUTH_URL } from "../constants/server.constant";
 import { get, post } from "./api";
 import { Warn } from "./log";
+import { UserInterface } from "../interfaces/database.interface";
 
 export const cred_name: string = "permata.kasir.login.credentials";
 
@@ -54,11 +55,14 @@ export async function refreshToken(params: {
   });
 
   // Get user data
-  const userData = await get(`/api/v1/${rt.role.toLowerCase()}/${data.tlp}`, {
-    headers: {
-      Authorization: `Bearer ${rt.access_token}`,
+  const userData: UserInterface = await get(
+    `/api/v1/${rt.role.toLowerCase()}/${data.tlp}`,
+    {
+      headers: {
+        Authorization: `Bearer ${rt.access_token}`,
+      },
     },
-  });
+  );
 
   // Update credentials on local storage
   setLoginCredentials({ ...rt, data: userData });
