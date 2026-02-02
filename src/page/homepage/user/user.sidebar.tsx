@@ -50,9 +50,6 @@ export function UserSidebar(): ReactNode {
   const loginDataState = useSelector(
     (state: ReduxRootStateType) => state.user_login_data,
   );
-  const settingsState = useSelector(
-    (state: ReduxRootStateType) => state.user_settings,
-  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
