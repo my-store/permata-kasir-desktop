@@ -7,64 +7,46 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 31-Jan-2026
+|  Updated At: 2-Feb-2026
 */
 
-import { getLoginCredentials, refreshToken } from "./credentials";
+import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
 import { SERVER_URL } from "../constants/server.constant";
-import axios, {
-  AxiosRequestConfig,
-  AxiosInstance,
-  isAxiosError,
-  AxiosError,
-} from "axios";
 
 // Axios Instance
 const api: AxiosInstance = axios.create({ baseURL: SERVER_URL });
 
-// Error handler
-async function ApiErr(error: any, callback: Function, ...args: any) {
-  // Axios error
-  if (isAxiosError(error)) {
-    const axiosErr = error as AxiosError;
-    // Get message from server
-    const { message }: any = axiosErr.response?.data;
-    // Token expired
-    if (message && message == "Unauthorized") {
-      // Get the login credentials
-      const savedCred = getLoginCredentials();
-      // Make sure the token is exist
-      if (savedCred) {
-        // Refresh token
-        const tokenRefreshed = await refreshToken(savedCred);
-        // Token is refreshed
-        if (tokenRefreshed) {
-          return callback(...args);
-        }
-      }
-    }
-  }
-
-  // FIX THIS, When toen is expired, request will receive error in console with code 500,
-  // indicates the server error, maybe access_token length is too long or something.
-
-  // Terminate task, display error to try-catch of caller (that call this function)
-  throw error;
-}
+// // Error handler
+// async function ApiErr(error: any, callback: Function, ...args: any) {
+//   // Axios error
+//   if (isAxiosError(error)) {
+//     const axiosErr = error as AxiosError;
+//     // Get message from server
+//     const { message }: any = axiosErr.response?.data;
+//     // Token expired
+//     if (message && message == "Unauthorized") {
+//       // Get the login credentials
+//       const savedCred = getLoginCredentials();
+//       // Make sure the token is exist
+//       if (savedCred) {
+//         // Refresh token
+//         const tokenRefreshed = await refreshToken(savedCred);
+//         // Token is refreshed
+//         if (tokenRefreshed) {
+//           return callback(...args);
+//         }
+//       }
+//     }
+//   }
+// }
 
 // Get Request
 export async function get(
   url: string,
   config?: AxiosRequestConfig,
 ): Promise<any> {
-  let res: any;
-  try {
-    const dataReq = await api.get(url, config);
-    res = dataReq.data;
-  } catch (error) {
-    return ApiErr(error, get, url, config);
-  }
-  return res;
+  let req: any = await api.get(url, config);
+  return req.data;
 }
 
 // Post Request
@@ -73,14 +55,8 @@ export async function post(
   data: any,
   config?: AxiosRequestConfig,
 ): Promise<any> {
-  let res: any;
-  try {
-    const dataReq = await api.post(url, data, config);
-    res = dataReq.data;
-  } catch (error) {
-    return ApiErr(error, get, url, config);
-  }
-  return res;
+  let req: any = await api.post(url, data, config);
+  return req.data;
 }
 
 // Path Request

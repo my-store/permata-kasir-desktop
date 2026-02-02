@@ -8,7 +8,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 31-Jan-2026
+|  Updated At: 2-Feb-2026
 */
 
 // Node Modules
@@ -38,6 +38,7 @@ import {
   setLoginCredentials,
   getLoginCredentials,
   refreshToken,
+  removeLoginCredentials,
 } from "../../lib/system/credentials";
 
 // Login Style
@@ -49,7 +50,6 @@ import ScienceBg from "../../assets/images/science.png";
 // Sounds
 import errorAudio from "../../assets/sounds/error.mp3";
 import { AUTH_URL } from "../../lib/constants/server.constant";
-import { useQuery } from "@tanstack/react-query";
 // Initialize error sound
 const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
@@ -160,9 +160,7 @@ export function Loginpage() {
     dispatch(login(role));
   }
 
-  async function tokenCheck(): Promise<any> {
-    let token: any = null;
-
+  async function tokenCheck(): Promise<void> {
     // Login token checking ...
     const savedCred = getLoginCredentials();
 
@@ -185,45 +183,38 @@ export function Loginpage() {
             Authorization: `Bearer ${savedCred.access_token}`,
           },
         });
-        // Token is still active
-        token = savedCred;
-      } catch {}
-
-      // Token expired, refreshing ...
-      try {
-        const tokenRefreshed: boolean = await refreshToken(savedCred);
-        // Token is refreshed
-        if (tokenRefreshed) {
-          token = getLoginCredentials(); // Reload | Get fresh data after refreshing and stored a new token data.
+        // Token is still active, redirect to homepage (user | kasir)
+        return redirectToHomepage(savedCred.role);
+      } catch {
+        // Token expired, refreshing ...
+        try {
+          const tokenRefreshed: boolean = await refreshToken(savedCred);
+          // Token is refreshed
+          if (tokenRefreshed) {
+            // Reload | Get fresh data after refreshing and stored a new token data.
+            const newSavedCred = getLoginCredentials();
+            // Token is refreshed, redirect to homepage (user | kasir)
+            return redirectToHomepage(newSavedCred.role);
+          }
+        } catch {
+          // Failed to refresh token, remove saved token (IMPORTANT to remove the old token)
+          removeLoginCredentials();
         }
-      } catch {}
+      }
     }
 
-    return token;
+    // Token expired, or no token exist
+    // Set login ready = true, to display login page.
+    dispatch(setLoginReady(true));
+    // Remove loading animation after 3 second
+    setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
   }
 
-  const { status, data } = useQuery({
-    queryKey: ["login.checkToken"],
-    queryFn: tokenCheck,
-  });
-
   useEffect(() => {
-    // Token exists, still-active or refreshed
-    if (status == "success" && data) {
-      // Data berisi credentials
-      return redirectToHomepage(data.role);
-    }
-
-    // Token doesn't exist
-    else {
-      // No token or refresh token is valid - Set login ready = true
-      // to open login page.
-      dispatch(setLoginReady(true));
-
-      // Remove loading animation after 3 second
-      setTimeout(() => dispatch(rootRemoveLoading()), APP_PAGE_LOADING_DELAY);
-    }
-  }, [status, data]);
+    return () => {
+      tokenCheck();
+    };
+  }, []);
 
   // Still not ready (isReady=false), but isLogin=true,
   // redirect to home-page (user | kasir) and also deep URL/ sub url:
