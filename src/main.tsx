@@ -12,13 +12,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 27-Jan-2026
+|  Updated At: 3-Feb-2026
 */
 
 // Pages
-import { KasirRoutes } from "./page/homepage/kasir";
-import { UserRoutes } from "./page/homepage/user";
-import { Loginpage } from "./page/login";
+import { KasirRoutes } from "./pages/homepage/kasir";
+import { UserRoutes } from "./pages/homepage/user";
+import { Loginpage } from "./pages/login";
 
 // Libraries
 import { RootProtectedLayoutInterface } from "./lib/interfaces/root.interface";
