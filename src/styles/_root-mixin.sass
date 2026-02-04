@@ -33,6 +33,10 @@
   justify-content: center
   @include flex-center($direction)
 
+@mixin flex-just-right($direction: row)
+  justify-content: right
+  @include flex-center($direction)
+
 @mixin flex-just-space-around($direction: row)
   justify-content: space-around
   @include flex-center($direction)

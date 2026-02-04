@@ -5,16 +5,19 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 3-Feb-2026
+|  Updated At: 4-Feb-2026
 */
 
 // Node Modules
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { CSSProperties, ReactNode } from "react";
 import { FiPlus } from "react-icons/fi";
 
 // Libraries
+import { openUserTokoInsertForm } from "../../../../lib/redux/reducers/user/toko.reducer";
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
+import { ReduxRootStateType } from "../../../../lib/redux/store.redux";
 
 // Templates
 import { ContentLoading } from "../../../../templates/loading";
@@ -24,6 +27,9 @@ import "../../../../styles/pages/homepage/user/toko/user.toko.main.style.sass";
 
 // Functions
 import { getAllToko } from "./_func";
+
+// Forms
+import { UserTokoInsertForm } from "./insert";
 
 interface TemplateInterface {
   data: TokoInterface[];
@@ -41,11 +47,6 @@ function Item({ data }: any): ReactNode {
   return (
     <div id="Items-Container" style={containerStyle}>
       {data.length < 1 && <p id="Empty-Message">Belum ada toko</p>}
-      {data.length < 1 && (
-        <div className="Add-New-Btn">
-          <FiPlus />
-        </div>
-      )}
       {data.map((d: TokoInterface, dx: number) => (
         <p key={dx}>
           {d.nama} | {d.tlp}
@@ -56,6 +57,9 @@ function Item({ data }: any): ReactNode {
 }
 
 function Page({ data, isPending }: TemplateInterface): ReactNode {
+  const state = useSelector((state: ReduxRootStateType) => state.user_toko);
+  const dispatch = useDispatch();
+
   const ready: boolean = !isPending;
   return (
     <div id="Toko">
@@ -63,6 +67,13 @@ function Page({ data, isPending }: TemplateInterface): ReactNode {
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
       {ready && <Item data={data} />}
+      <FiPlus
+        className="Add-New-Btn"
+        title="Buat toko baru"
+        size={"1.5rem"}
+        onClick={() => dispatch(openUserTokoInsertForm())}
+      />
+      {state.insert.opened && <UserTokoInsertForm />}
     </div>
   );
 }

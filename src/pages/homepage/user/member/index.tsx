@@ -7,54 +7,75 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 31-Jan-2026
+|  Updated At: 4-Feb-2026
 */
 
 // Node Modules
+import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
+import { FiPlus } from "react-icons/fi";
 
 // Libraries
+import { openUserMemberInsertForm } from "../../../../lib/redux/reducers/user/member.reducer";
 import { MemberInterface } from "../../../../lib/interfaces/database.interface";
+import { ReduxRootStateType } from "../../../../lib/redux/store.redux";
 
 // Templates
 import { ContentLoading } from "../../../../templates/loading";
 
+// Style
+import "../../../../styles/pages/homepage/user/member/user.member.main.style.sass";
+
 // Functions
 import { getAllMember } from "./_func";
+
+// Forms
+import { UserMemberInsertForm } from "./insert";
 
 interface TemplateInterface {
   data: MemberInterface[];
   isPending: boolean;
 }
 
-function Header(): ReactNode {
+function Item({ data }: any): ReactNode {
+  let containerStyle: CSSProperties = {};
+
+  // If data is grather than .., activate scrollbar
+  if (data.length > 0) {
+    containerStyle.overflowY = "scroll";
+  }
+
   return (
-    <div id="Header">
-      <h1>Member</h1>
-      <p>Daftar Member</p>
+    <div id="Items-Container" style={containerStyle}>
+      {data.length < 1 && <p id="Empty-Message">Belum ada member</p>}
+      {data.map((d: MemberInterface, dx: number) => (
+        <p key={dx}>
+          {d.nama} | {d.alamat}
+        </p>
+      ))}
     </div>
   );
 }
 
-function Item({ data }: any): ReactNode {
-  if (data.length < 1) return <p>Masih Kosong</p>;
-  return data.map((d: MemberInterface, dx: number) => (
-    <p key={dx}>
-      {d.nama} | {d.alamat} | {d.tlp}
-    </p>
-  ));
-}
-
 function Template({ data, isPending }: TemplateInterface): ReactNode {
+  const state = useSelector((state: ReduxRootStateType) => state.user_member);
+  const dispatch = useDispatch();
+
   const ready: boolean = !isPending;
   return (
     <div id="Member">
       {isPending && (
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
-      {ready && <Header />}
       {ready && <Item data={data} />}
+      <FiPlus
+        className="Add-New-Btn"
+        title="Buat member baru"
+        size={"1.5rem"}
+        onClick={() => dispatch(openUserMemberInsertForm())}
+      />
+      {state.insert.opened && <UserMemberInsertForm />}
     </div>
   );
 }
