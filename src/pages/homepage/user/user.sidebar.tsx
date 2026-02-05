@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 2-Feb-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 5-Feb-2026
 */
 
 // Node Modules
@@ -97,54 +97,27 @@ export function UserSidebar(): ReactNode {
       <div id="User-Button-Container">
         <div className="Btn-Container">
           <IoHome size={"1.1rem"} color="#eee" />
-          <button className="Sidebar-Btn" onClick={() => navigate("/user")}>
-            Beranda
-          </button>
+          <button onClick={() => navigate("/user")}>Beranda</button>
         </div>
         <div className="Btn-Container">
           <FaShopify size={"1.1rem"} color="#eee" />
-          <button
-            className="Sidebar-Btn"
-            onClick={() => navigate("/user/toko")}
-          >
-            Toko
-          </button>
+          <button onClick={() => navigate("/user/toko")}>Toko</button>
         </div>
         <div className="Btn-Container">
           <FaDropbox size={"1.1rem"} color="#eee" />
-          <button
-            className="Sidebar-Btn"
-            onClick={() => navigate("/user/produk")}
-          >
-            Produk
-          </button>
+          <button onClick={() => navigate("/user/produk")}>Produk</button>
         </div>
         <div className="Btn-Container">
           <MdDiscount size={"1.1rem"} color="#eee" />
-          <button
-            className="Sidebar-Btn"
-            onClick={() => navigate("/user/diskon")}
-          >
-            Diskon
-          </button>
+          <button onClick={() => navigate("/user/diskon")}>Diskon</button>
         </div>
         <div className="Btn-Container">
           <FaServicestack size={"1.1rem"} color="#eee" />
-          <button
-            className="Sidebar-Btn"
-            onClick={() => navigate("/user/jasa")}
-          >
-            Jasa
-          </button>
+          <button onClick={() => navigate("/user/jasa")}>Jasa</button>
         </div>
         <div className="Btn-Container">
           <FaUserFriends size={"1.1rem"} color="#eee" />
-          <button
-            className="Sidebar-Btn"
-            onClick={() => navigate("/user/member")}
-          >
-            Member
-          </button>
+          <button onClick={() => navigate("/user/member")}>Member</button>
         </div>
         <div className="Btn-Container">
           <FaBookOpen size={"1.1rem"} color="#eee" />
