@@ -8,13 +8,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 6-Feb-2026
 */
 
 // Node Modules
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosError, isAxiosError } from "axios";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import $ from "jquery";
@@ -37,12 +37,12 @@ import {
   rootRemoveLoading,
   rootOpenLoading,
 } from "../../lib/redux/reducers/root.reducer";
-import { get, post } from "../../lib/system/api";
+import { api } from "../../lib/system/api";
 import {
+  removeLoginCredentials,
   setLoginCredentials,
   getLoginCredentials,
   refreshToken,
-  removeLoginCredentials,
 } from "../../lib/system/credentials";
 
 // Login Style
@@ -116,18 +116,28 @@ export function Loginpage() {
     let userData: UserInterface;
     try {
       // Send login request
-      loginData = await post(AUTH_URL, {
+      const loginReq: AxiosResponse = await api.post(AUTH_URL, {
         tlp,
         password,
         app_name,
       });
+      loginData = loginReq.data;
 
       // Get user data
-      userData = await get(`/api/v1/${loginData.role.toLowerCase()}/${tlp}`, {
-        headers: {
-          Authorization: `Bearer ${loginData.access_token}`,
+      const userReq: AxiosResponse = await api.get(
+        `/api/v1/${loginData.role.toLowerCase()}/${tlp}`,
+        {
+          headers: {
+            Authorization: `Bearer ${loginData.access_token}`,
+          },
         },
-      });
+      );
+      userData = userReq.data;
+      /*
+      |
+      | Login success, everything's OK
+      |
+      */
     } catch (error) {
       // Axios error
       if (isAxiosError(error)) {
@@ -184,8 +194,10 @@ export function Loginpage() {
       // sub = No Tlp. User/Kasir
       // role = User/Kasir
       try {
-        await get(AUTH_URL, {
-          headers: { Authorization: `Bearer ${savedCred.access_token}` },
+        await api.get(AUTH_URL, {
+          headers: {
+            Authorization: `Bearer ${savedCred.access_token}`,
+          },
         });
         // Token still alive
         token = savedCred;

@@ -8,14 +8,14 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 6-Feb-2026
 */
 
 import { RefreshTokenInterface } from "../interfaces/api.interface";
-import { AUTH_URL } from "../constants/server.constant";
-import { get, post } from "./api";
-import { Warn } from "./log";
 import { UserInterface } from "../interfaces/database.interface";
+import { AUTH_URL } from "../constants/server.constant";
+import { AxiosResponse } from "axios";
+import { api } from "./api";
 
 export const cred_name: string = "permata.kasir.login.credentials";
 
@@ -34,7 +34,6 @@ export function getLoginCredentials(): any {
 }
 
 export function removeLoginCredentials(): void {
-  Warn(`Menghapus: LocalStorage(${cred_name})`);
   localStorage.removeItem(cred_name);
 }
 
@@ -48,22 +47,25 @@ export async function refreshToken(params: {
   const { access_token, refresh_token, data } = params;
 
   // Melakukan permintaan ke server untuk dibuatkan token baru
-  const rt: RefreshTokenInterface = await post(`${AUTH_URL}/refresh`, {
-    access_token,
-    refresh_token,
-    tlp: data.tlp,
-  });
+  const rt: AxiosResponse<RefreshTokenInterface> = await api.post(
+    `${AUTH_URL}/refresh`,
+    {
+      access_token,
+      refresh_token,
+      tlp: data.tlp,
+    },
+  );
 
   // Get user data
-  const userData: UserInterface = await get(
-    `/api/v1/${rt.role.toLowerCase()}/${data.tlp}`,
+  const userData: AxiosResponse<UserInterface> = await api.get(
+    `/api/v1/${rt.data.role.toLowerCase()}/${data.tlp}`,
     {
       headers: {
-        Authorization: `Bearer ${rt.access_token}`,
+        Authorization: `Bearer ${rt.data.access_token}`,
       },
     },
   );
 
   // Update credentials on local storage
-  setLoginCredentials({ ...rt, data: userData });
+  setLoginCredentials({ ...rt.data, data: userData.data });
 }

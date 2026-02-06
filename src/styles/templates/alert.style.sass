@@ -1,10 +1,21 @@
+@use "../root-mixin" as *
+// @use "../root-vars" as *
+
+$error-title-color: rgb(233, 100, 100)
+$warning-title-color: rgb(233, 224, 100)
+$success-title-color: rgb(111, 233, 100)
+
+$error-body-background: rgb(238, 167, 167)
+$warning-body-background: rgb(238, 238, 167)
+$success-body-background: rgb(167, 238, 171)
+
 .Alert
   width: 100%
   height: 100vh
   position: fixed
   left: 0px
   top: 0px
-  z-index: 4
+  z-index: 10
   background-color: rgba($color: #000000, $alpha: 0.7)
 
   display: flex
@@ -15,10 +26,9 @@
   opacity: 0
 
   .Alert-Box
-    width: 350px
-    height: 200px
+    width: 35vw
     background-color: white
-    border-radius: 7px
+    border-radius: 0.3rem
     overflow: hidden
 
     position: relative
@@ -28,50 +38,46 @@
     animation-duration: 0.2s
 
     &:is(.Error)
-      background-color: rgb(238, 167, 167)
+      background-color: $error-body-background
 
     &:is(.Warning)
-      background-color: rgb(238, 238, 167)
+      background-color: $warning-body-background
 
     &:is(.Success)
-      background-color: rgb(167, 238, 171)
+      background-color: $success-body-background
 
     .Alert-Title
       text-align: center
       font-size: 16px
       line-height: 16px
-      padding: 10px 0px 10px 0px
-      margin-bottom: 5px
+      padding: 0.5rem 0 0.5rem 0
 
       &:is(.Error)
-        background-color: rgb(233, 100, 100)
+        background-color: $error-title-color
 
       &:is(.Warning)
-        background-color: rgb(233, 224, 100)
+        background-color: $warning-title-color
 
       &:is(.Success)
-        background-color: rgb(111, 233, 100)
+        background-color: $success-title-color
 
     .Alert-Body
       width: 100%
-      height: 125px
-      padding: 2px 5px 2px 5px
       font-size: 14px
       line-height: 16px
+      height: 15vh
+      padding: 0.3rem 0.5rem 0.3rem 0.5rem
 
     .Alert-Button-Container
       width: 100%
       display: flex
       justify-content: flex-end
-      padding: 0px 7px 0px 7px
+      padding: 0 0.7rem 0.5rem 0
 
       button
-        outline: none
+        @include rm-def-btn-styles
         font-size: 14px
         cursor: pointer
-        border: 1px solid grey
-        padding: 3px 20px 3px 20px
-        border-radius: 7px
 
         &:not(:nth-child(1))
           margin-left: 5px

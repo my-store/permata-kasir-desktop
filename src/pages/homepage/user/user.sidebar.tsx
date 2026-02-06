@@ -69,10 +69,7 @@ export function UserSidebar(): ReactNode {
   }
 
   useEffect(() => {
-    // Cleanup function
-    return () => {
-      load();
-    };
+    load();
   }, []);
 
   return (

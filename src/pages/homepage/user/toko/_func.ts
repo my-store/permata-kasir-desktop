@@ -5,26 +5,14 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 6-Feb-2026
 */
 
 // Libraries
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
-import { afterSignedInErrorHandler, get } from "../../../../lib/system/api";
-import { getLoginCredentials } from "../../../../lib/system/credentials";
+import { api, errHandler, includeToken } from "../../../../lib/system/api";
 import { TOKO_URL } from "../../../../lib/constants/server.constant";
-
-// Node Modules
-import { AxiosRequestConfig } from "axios";
-
-// Api Request Configurations
-function config(): AxiosRequestConfig {
-  return {
-    headers: {
-      Authorization: `Bearer ${getLoginCredentials().access_token}`,
-    },
-  };
-}
+import { AxiosResponse } from "axios";
 
 export async function getAllToko(): Promise<TokoInterface[]> {
   return getWhereToko("");
@@ -33,17 +21,10 @@ export async function getAllToko(): Promise<TokoInterface[]> {
 export async function getWhereToko(args: string): Promise<TokoInterface[]> {
   let toko: TokoInterface[] = [];
   try {
-    toko = await get(TOKO_URL + args, config());
+    const req: AxiosResponse = await api.get(TOKO_URL + args, includeToken());
+    toko = req.data;
   } catch (err) {
-    // Trying to handle error
-    try {
-      await afterSignedInErrorHandler(err, {
-        func: getWhereToko,
-        args: [args],
-      });
-    } catch {
-      // Failed to handle error
-    }
+    await errHandler(err, getWhereToko, [args]);
   }
   return toko;
 }
@@ -51,16 +32,26 @@ export async function getWhereToko(args: string): Promise<TokoInterface[]> {
 export async function getOneToko(args: string): Promise<TokoInterface | null> {
   let toko: TokoInterface | null = null;
   try {
-    toko = await get(TOKO_URL + args, config());
+    const req: AxiosResponse = await api.get(TOKO_URL + args, includeToken());
+    toko = req.data;
   } catch (err) {
+    await errHandler(err, getOneToko, [args]);
+  }
+  return toko;
+}
+
+export async function insertToko(data: any): Promise<TokoInterface | null> {
+  let toko: TokoInterface | null = null;
+  try {
+    const req: AxiosResponse = await api.post(TOKO_URL, data, includeToken());
+    toko = req.data;
+  } catch (err: any) {
     // Trying to handle error
     try {
-      await afterSignedInErrorHandler(err, {
-        func: getOneToko,
-        args: [args],
-      });
-    } catch {
-      // Failed to handle error
+      await errHandler(err, insertToko, [data]);
+    } catch (unhandledErr) {
+      // Handle error inside save function in insert/index.tsx file
+      throw unhandledErr;
     }
   }
   return toko;

@@ -5,26 +5,14 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 31-Jan-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 6-Feb-2026
 */
 
 // Libraries
 import { MemberInterface } from "../../../../lib/interfaces/database.interface";
-import { afterSignedInErrorHandler, get } from "../../../../lib/system/api";
-import { getLoginCredentials } from "../../../../lib/system/credentials";
+import { errHandler, api, includeToken } from "../../../../lib/system/api";
 import { MEMBER_URL } from "../../../../lib/constants/server.constant";
-
-// Node Modules
-import { AxiosRequestConfig } from "axios";
-
-// Api Request Configurations
-function config(): AxiosRequestConfig {
-  return {
-    headers: {
-      Authorization: `Bearer ${getLoginCredentials().access_token}`,
-    },
-  };
-}
+import { AxiosResponse } from "axios";
 
 export async function getAllMember(): Promise<MemberInterface[]> {
   return getWhereMember("");
@@ -33,17 +21,10 @@ export async function getAllMember(): Promise<MemberInterface[]> {
 export async function getWhereMember(args: string): Promise<MemberInterface[]> {
   let member: MemberInterface[] = [];
   try {
-    member = await get(MEMBER_URL + args, config());
+    const req: AxiosResponse = await api.get(MEMBER_URL + args, includeToken());
+    member = req.data;
   } catch (err) {
-    // Trying to handle error
-    try {
-      await afterSignedInErrorHandler(err, {
-        func: getWhereMember,
-        args: [args],
-      });
-    } catch {
-      // Failed to handle error
-    }
+    await errHandler(err, getWhereMember, [args]);
   }
   return member;
 }
@@ -53,17 +34,10 @@ export async function getOneMember(
 ): Promise<MemberInterface | null> {
   let member: MemberInterface | null = null;
   try {
-    member = await get(MEMBER_URL + args, config());
+    const req: AxiosResponse = await api.get(MEMBER_URL + args, includeToken());
+    member = req.data;
   } catch (err) {
-    // Trying to handle error
-    try {
-      await afterSignedInErrorHandler(err, {
-        func: getOneMember,
-        args: [args],
-      });
-    } catch {
-      // Failed to handle error
-    }
+    await errHandler(err, getOneMember, [args]);
   }
   return member;
 }

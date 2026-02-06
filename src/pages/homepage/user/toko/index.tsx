@@ -5,19 +5,22 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 4-Feb-2026
+|  Updated At: 5-Feb-2026
 */
 
 // Node Modules
+import { CSSProperties, ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { CSSProperties, ReactNode } from "react";
 import { FiPlus } from "react-icons/fi";
 
 // Libraries
-import { openUserTokoInsertForm } from "../../../../lib/redux/reducers/user/toko.reducer";
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
 import { ReduxRootStateType } from "../../../../lib/redux/store.redux";
+import {
+  openUserTokoInsertForm,
+  setUserTokoList,
+} from "../../../../lib/redux/reducers/user/toko.reducer";
 
 // Templates
 import { ContentLoading } from "../../../../templates/loading";
@@ -80,10 +83,19 @@ function Page({ data, isPending }: TemplateInterface): ReactNode {
 
 // Entry Point
 export function Toko(): ReactNode {
-  const query = useQuery({
+  const { list } = useSelector((state: ReduxRootStateType) => state.user_toko);
+  const dispatch = useDispatch();
+
+  const { isPending, data } = useQuery({
     queryKey: ["user.toko.getAll"],
     queryFn: getAllToko,
   });
 
-  return <Page data={query.data ?? []} isPending={query.isPending} />;
+  useEffect(() => {
+    if (data) {
+      dispatch(setUserTokoList(data));
+    }
+  }, [data]);
+
+  return <Page data={list} isPending={isPending} />;
 }
