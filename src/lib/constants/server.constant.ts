@@ -4,6 +4,7 @@ export const API_VERSION: string = "v1";
 export const API_URL: string = `${SERVER_URL}/api/${API_VERSION}`;
 export const AUTH_URL: string = `${API_URL}/auth`;
 export const USER_URL: string = `${API_URL}/user`;
+export const USER_RANK_URL: string = `${API_URL}/user-rank`;
 export const KASIR_URL: string = `${API_URL}/kasir`;
 export const TOKO_URL: string = `${API_URL}/toko`;
 export const PRODUK_URL: string = `${API_URL}/produk`;

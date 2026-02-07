@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 7-Feb-2026
 */
 
 // Libraries
@@ -15,7 +15,15 @@ import { TOKO_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
 export async function getAllToko(): Promise<TokoInterface[]> {
-  return getWhereToko("");
+  const select: any = {
+    kasir: {
+      select: {
+        nama: true,
+      },
+    },
+  };
+  const args: string = `?select=${JSON.stringify(select)}`;
+  return getWhereToko(args);
 }
 
 export async function getWhereToko(args: string): Promise<TokoInterface[]> {
@@ -24,7 +32,13 @@ export async function getWhereToko(args: string): Promise<TokoInterface[]> {
     const req: AxiosResponse = await api.get(TOKO_URL + args, includeToken());
     toko = req.data;
   } catch (err) {
-    await errHandler(err, getWhereToko, [args]);
+    // Trying to handle error
+    try {
+      await errHandler(err, getWhereToko, [args]);
+    } catch (unhandledErr) {
+      // Handle error inside save function in insert/index.tsx file
+      throw unhandledErr;
+    }
   }
   return toko;
 }
@@ -35,7 +49,13 @@ export async function getOneToko(args: string): Promise<TokoInterface | null> {
     const req: AxiosResponse = await api.get(TOKO_URL + args, includeToken());
     toko = req.data;
   } catch (err) {
-    await errHandler(err, getOneToko, [args]);
+    // Trying to handle error
+    try {
+      await errHandler(err, getOneToko, [args]);
+    } catch (unhandledErr) {
+      // Handle error inside save function in insert/index.tsx file
+      throw unhandledErr;
+    }
   }
   return toko;
 }

@@ -12,7 +12,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 3-Feb-2026
+|  Updated At: 7-Feb-2026
 */
 
 // Pages
@@ -82,11 +82,14 @@ function App(): ReactNode {
     // When socket is connected
     socket.on("connect", () => {
       // Broadcast to other, that i'm is online now
-      const { role, data } = getLoginCredentials();
-      socket.emit("online", { tlp: data.tlp, role });
+      const cred = getLoginCredentials();
+      if (cred) {
+        const { role, data } = cred;
+        socket.emit("online", { tlp: data.tlp, role });
 
-      // Return the next logic to callback
-      callback();
+        // Return the next logic to callback
+        callback();
+      }
     });
 
     // When socket connect is failed

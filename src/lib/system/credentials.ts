@@ -8,7 +8,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 7-Feb-2026
 */
 
 import { RefreshTokenInterface } from "../interfaces/api.interface";
@@ -57,8 +57,19 @@ export async function refreshToken(params: {
   );
 
   // Get user data
+  const selectArgs: any = {
+    userRank: {
+      select: {
+        uuid: true,
+        maxToko: true,
+        maxProduk: true,
+        maxJasa: true,
+      },
+    },
+  };
+  const args: string = `?select=${JSON.stringify(selectArgs)}`;
   const userData: AxiosResponse<UserInterface> = await api.get(
-    `/api/v1/${rt.data.role.toLowerCase()}/${data.tlp}`,
+    `/api/v1/${rt.data.role.toLowerCase()}/${data.tlp}/${args}`,
     {
       headers: {
         Authorization: `Bearer ${rt.data.access_token}`,

@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 5-Feb-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 7-Feb-2026
 */
 
 // Node Modules
-import { ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ReactNode, useEffect } from "react";
 import $ from "jquery";
 
 // Libraries
@@ -18,6 +18,7 @@ import { TokoInterface } from "../../../../../lib/interfaces/database.interface"
 import { openAlert } from "../../../../../lib/redux/reducers/alert.reducer";
 import { getLoginCredentials } from "../../../../../lib/system/credentials";
 import { ReduxRootStateType } from "../../../../../lib/redux/store.redux";
+import { errorSound } from "../../../../../lib/constants/media.constant";
 import {
   closeUserTokoInsertForm,
   setWaitUserTokoInsert,
@@ -32,12 +33,6 @@ import { insertToko } from "../_func";
 
 // Style
 import "../../../../../styles/pages/homepage/user/toko/user.toko.insert.style.sass";
-
-// Sounds
-import errorAudio from "../../../../../assets/sounds/error.mp3";
-
-// Initialize error sound
-const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
 export function UserTokoInsertForm(): ReactNode {
   const alertState = useSelector((state: ReduxRootStateType) => state.alert);

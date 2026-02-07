@@ -7,18 +7,18 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 28-Jan-2026
+|  Updated At: 7-Feb-2026
 */
 
 // Interfaces
-import { UserLoginData } from "../../../interfaces/user/login.data.interface";
+import { UserLoginDataInterface } from "../../../interfaces/user/login.data.interface";
 import { ReduxActionInterface } from "../../../interfaces/redux.interface";
 
 // Node Modules
 import { createSlice } from "@reduxjs/toolkit";
 
 interface DefaultLoginDataInterface {
-  data: UserLoginData | null;
+  data: UserLoginDataInterface | null;
 }
 
 const DefaultLoginDataState: DefaultLoginDataInterface = {

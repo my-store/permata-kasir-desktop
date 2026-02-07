@@ -8,7 +8,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 7-Feb-2026
 */
 
 // Node Modules
@@ -20,11 +20,11 @@ import { useEffect } from "react";
 import $ from "jquery";
 
 // Libraries
-import { APP_PAGE_LOADING_DELAY } from "../../lib/constants/app.constant";
 import { UserInterface } from "../../lib/interfaces/database.interface";
 import { TokenInterface } from "../../lib/interfaces/api.interface";
 import { openAlert } from "../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../lib/redux/store.redux";
+import { errorSound } from "../../lib/constants/media.constant";
 import { AUTH_URL } from "../../lib/constants/server.constant";
 import { findParams } from "../../lib/system/url";
 import {
@@ -39,6 +39,10 @@ import {
 } from "../../lib/redux/reducers/root.reducer";
 import { api } from "../../lib/system/api";
 import {
+  APP_PAGE_LOADING_DELAY,
+  APP_CLIENT_NAME,
+} from "../../lib/constants/app.constant";
+import {
   removeLoginCredentials,
   setLoginCredentials,
   getLoginCredentials,
@@ -50,12 +54,6 @@ import "../../styles/pages/login.style.sass";
 
 // Images
 import ScienceBg from "../../assets/images/science.png";
-
-// Sounds
-import errorAudio from "../../assets/sounds/error.mp3";
-
-// Initialize error sound
-const errorSound: HTMLAudioElement = new Audio(errorAudio);
 
 // Entry Point
 export function Loginpage() {
@@ -103,7 +101,7 @@ export function Loginpage() {
     const password: any = $("#Loginpage #password").val();
 
     // Extra data (security update 27-Jan-2026)
-    const app_name: string = "Permata-Kasir-Client-Desktop";
+    const app_name: string = APP_CLIENT_NAME;
 
     // No data is presented
     if (tlp.length < 1 || password.length < 1) {
@@ -124,8 +122,19 @@ export function Loginpage() {
       loginData = loginReq.data;
 
       // Get user data
+      const selectArgs: any = {
+        userRank: {
+          select: {
+            uuid: true,
+            maxToko: true,
+            maxProduk: true,
+            maxJasa: true,
+          },
+        },
+      };
+      const args: string = `?select=${JSON.stringify(selectArgs)}`;
       const userReq: AxiosResponse = await api.get(
-        `/api/v1/${loginData.role.toLowerCase()}/${tlp}`,
+        `/api/v1/${loginData.role.toLowerCase()}/${tlp}/${args}`,
         {
           headers: {
             Authorization: `Bearer ${loginData.access_token}`,

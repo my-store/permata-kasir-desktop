@@ -16,3 +16,6 @@ export const AUTHOR_PHONE: string = "0823-2438-0852";
 export const AUTHOR_ADDRESS: string = "Kersana, Brebes Jawa tengah";
 export const AUTHOR_COMPLETE_ADDRESS: string = `Jagapura 03/03 ${AUTHOR_ADDRESS}`;
 export const AUTHOR_POSTAL_CODE: string = "52264";
+
+// Authorization information
+export const APP_CLIENT_NAME: string = "Permata-Kasir-Client-Desktop";

@@ -1,4 +1,6 @@
-export interface UserLoginData {
+import { UserRankInterface } from "../database.interface";
+
+export interface UserLoginDataInterface {
   id?: number;
   adminId?: number;
   uuid?: string;
@@ -6,6 +8,7 @@ export interface UserLoginData {
   alamat?: string;
   tlp?: string;
   userRankId?: number;
+  userRank?: UserRankInterface;
   active?: boolean;
   deactivatedAt?: string | null;
   deactivatedReason?: string | null;

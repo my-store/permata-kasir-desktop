@@ -9,6 +9,17 @@ export interface UserInterface {
   updatedAt?: string;
 }
 
+export interface UserRankInterface {
+  id?: number;
+  uuid?: string;
+  nama?: string;
+  maxToko?: number;
+  maxProduk?: number;
+  maxJasa?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface KasirInterface {
   id?: number;
   uuid?: string;
@@ -27,6 +38,7 @@ export interface TokoInterface {
   alamat?: string;
   tlp?: string;
   user?: UserInterface;
+  kasir?: KasirInterface[];
   userId?: number;
   createdAt?: string;
   updatedAt?: string;
