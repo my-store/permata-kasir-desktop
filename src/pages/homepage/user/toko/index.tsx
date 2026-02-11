@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 7-Feb-2026
+|  Updated At: 9-Feb-2026
 */
 
 // Node Modules
@@ -36,7 +36,7 @@ import { getAllToko } from "./_func";
 import { UserTokoInsertForm } from "./insert";
 import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
 
-interface TemplateInterface {
+interface PageInterface {
   data: TokoInterface[];
   isPending: boolean;
 }
@@ -78,7 +78,7 @@ function Item({ data }: any): ReactNode {
   );
 }
 
-function Page({ data, isPending }: TemplateInterface): ReactNode {
+function Page({ data, isPending }: PageInterface): ReactNode {
   const loginState = useSelector(
     (state: ReduxRootStateType) => state.user_login_data,
   );

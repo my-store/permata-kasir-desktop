@@ -7,11 +7,11 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 2-Feb-2026
-|  Updated At: 5-Feb-2026
+|  Updated At: 9-Feb-2026
 */
 
 // Node Modules
-import { FaBookOpen, FaUserFriends } from "react-icons/fa";
+import { FaBookOpen, FaUserFriends, FaUserTie } from "react-icons/fa";
 import { IoHome, IoSettingsSharp } from "react-icons/io5";
 import { GiProgression, GiWallet } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
@@ -99,6 +99,10 @@ export function UserSidebar(): ReactNode {
         <div className="Btn-Container">
           <FaShopify size={"1.1rem"} color="#eee" />
           <button onClick={() => navigate("/user/toko")}>Toko</button>
+        </div>
+        <div className="Btn-Container">
+          <FaUserTie size={"1.1rem"} color="#eee" />
+          <button onClick={() => navigate("/user/kasir")}>Kasir</button>
         </div>
         <div className="Btn-Container">
           <FaDropbox size={"1.1rem"} color="#eee" />

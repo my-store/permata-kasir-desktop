@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 4-Feb-2026
+|  Updated At: 9-Feb-2026
 */
 
 // Node Modules
@@ -33,7 +33,7 @@ import { getAllMember } from "./_func";
 // Forms
 import { UserMemberInsertForm } from "./insert";
 
-interface TemplateInterface {
+interface PageInterface {
   data: MemberInterface[];
   isPending: boolean;
 }
@@ -58,7 +58,7 @@ function Item({ data }: any): ReactNode {
   );
 }
 
-function Template({ data, isPending }: TemplateInterface): ReactNode {
+function Page({ data, isPending }: PageInterface): ReactNode {
   const state = useSelector((state: ReduxRootStateType) => state.user_member);
   const dispatch = useDispatch();
 
@@ -69,13 +69,15 @@ function Template({ data, isPending }: TemplateInterface): ReactNode {
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
       {ready && <Item data={data} />}
-      <FiPlus
-        className="Add-New-Btn"
-        title="Buat member baru"
-        size={"1.5rem"}
-        onClick={() => dispatch(openUserMemberInsertForm())}
-      />
-      {state.insert.opened && <UserMemberInsertForm />}
+      {ready && (
+        <FiPlus
+          className="Add-New-Btn"
+          title="Buat member baru"
+          size={"1.5rem"}
+          onClick={() => dispatch(openUserMemberInsertForm())}
+        />
+      )}
+      {ready && state.insert.opened && <UserMemberInsertForm />}
     </div>
   );
 }
@@ -87,9 +89,5 @@ export function Member(): ReactNode {
     queryFn: getAllMember,
   });
 
-  return (
-    <div id="Member">
-      <Template data={query.data ?? []} isPending={query.isPending} />
-    </div>
-  );
+  return <Page data={query.data ?? []} isPending={query.isPending} />;
 }

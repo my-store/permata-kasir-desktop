@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 5-Feb-2026
+|  Updated At: 9-Feb-2026
 */
 
 // Node Modules
@@ -31,7 +31,7 @@ import { getAllJasa } from "./_func";
 // Style
 import "../../../../styles/pages/homepage/user/jasa/user.jasa.main.style.sass";
 
-interface TemplateInterface {
+interface PageInterface {
   data: JasaInterface[];
   isPending: boolean;
 }
@@ -56,7 +56,7 @@ function Item({ data }: any): ReactNode {
   );
 }
 
-function Template({ data, isPending }: TemplateInterface): ReactNode {
+function Page({ data, isPending }: PageInterface): ReactNode {
   const state = useSelector((state: ReduxRootStateType) => state.user_jasa);
   const dispatch = useDispatch();
 
@@ -67,13 +67,15 @@ function Template({ data, isPending }: TemplateInterface): ReactNode {
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
       {ready && <Item data={data} />}
-      <FiPlus
-        className="Add-New-Btn"
-        title="Buat jasa baru"
-        size={"1.5rem"}
-        onClick={() => dispatch(openUserJasaInsertForm())}
-      />
-      {state.insert.opened && <UserJasaInsertForm />}
+      {ready && (
+        <FiPlus
+          className="Add-New-Btn"
+          title="Buat jasa baru"
+          size={"1.5rem"}
+          onClick={() => dispatch(openUserJasaInsertForm())}
+        />
+      )}
+      {ready && state.insert.opened && <UserJasaInsertForm />}
     </div>
   );
 }
@@ -85,9 +87,5 @@ export function Jasa(): ReactNode {
     queryFn: getAllJasa,
   });
 
-  return (
-    <div id="Jasa">
-      <Template data={query.data ?? []} isPending={query.isPending} />
-    </div>
-  );
+  return <Page data={query.data ?? []} isPending={query.isPending} />;
 }

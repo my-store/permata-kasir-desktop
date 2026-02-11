@@ -1,12 +1,5 @@
-/* ===========================================================
-|  INPUT DATA TOKO
-|  ===========================================================
-|  Jangan lupa untuk memperbarui dokumen ini
-|  jika ada perubahan atau penambahan fitur baru.
-|  -----------------------------------------------------------
-|  Created At: 5-Feb-2026
-|  Updated At: 11-Feb-2026
-*/
+// Style
+import "../../../../../styles/pages/homepage/user/kasir/user.kasir.insert.style.sass";
 
 // Node Modules
 import { useDispatch, useSelector } from "react-redux";
@@ -14,30 +7,25 @@ import { ReactNode, useEffect } from "react";
 import $ from "jquery";
 
 // Libraries
-import { TokoInterface } from "../../../../../lib/interfaces/database.interface";
-import { openAlert } from "../../../../../lib/redux/reducers/alert.reducer";
 import { getLoginCredentials } from "../../../../../lib/system/credentials";
+import { openAlert } from "../../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../../lib/redux/store.redux";
 import { errorSound } from "../../../../../lib/constants/media.constant";
 import {
-  closeUserTokoInsertForm,
-  setWaitUserTokoInsert,
-} from "../../../../../lib/redux/reducers/user/toko.reducer";
+  closeUserKasirInsertForm,
+  setWaitUserKasirInsert,
+} from "../../../../../lib/redux/reducers/user/kasir.reducer";
 import {
   capitalizeFirstChar,
   capitalizeEachWord,
 } from "../../../../../lib/system/string";
+import { KasirInterface } from "../../../../../lib/interfaces/database.interface";
+import { insertKasir } from "../_func";
 
-// Functions
-import { insertToko } from "../_func";
-
-// Style
-import "../../../../../styles/pages/homepage/user/toko/user.toko.insert.style.sass";
-
-export function UserTokoInsertForm(): ReactNode {
+export function UserKasirInsertForm(): ReactNode {
   const alertState = useSelector((state: ReduxRootStateType) => state.alert);
-  const userTokoState = useSelector(
-    (state: ReduxRootStateType) => state.user_toko,
+  const userKasirState = useSelector(
+    (state: ReduxRootStateType) => state.user_kasir,
   );
   const dispatch = useDispatch();
 
@@ -45,7 +33,10 @@ export function UserTokoInsertForm(): ReactNode {
     const nama: JQuery<HTMLInputElement | any> = $("input[name='nama']");
     const alamat: JQuery<HTMLInputElement | any> = $("input[name='alamat']");
     const tlp: JQuery<HTMLInputElement | any> = $("input[name='tlp']");
-    return { nama, alamat, tlp };
+    const password: JQuery<HTMLInputElement | any> = $(
+      "input[name='password']",
+    );
+    return { nama, alamat, tlp, password };
   }
 
   function failed(msg: string): void {
@@ -56,18 +47,23 @@ export function UserTokoInsertForm(): ReactNode {
     dispatch(openAlert({ type: "Error", title: "Gagal Input", body: msg }));
 
     // Close from insert-wait state
-    dispatch(setWaitUserTokoInsert(false));
+    dispatch(setWaitUserKasirInsert(false));
   }
 
   async function save() {
+    // Pending ...
+    // Harus menambahkan metode untuk menginput ID toko
+    return failed("Please add tokoId method!");
+
     // If insert is already submit
-    if (userTokoState.insert.wait) {
+    if (userKasirState.insert.wait) {
       // Block multiple submiting
       return;
     }
 
     const cred = getLoginCredentials();
-    const { nama, alamat, tlp } = getInputs();
+
+    const { nama, alamat, tlp, password } = getInputs();
 
     // Tidak menulis nama
     if (nama.val().length < 1) {
@@ -87,10 +83,16 @@ export function UserTokoInsertForm(): ReactNode {
       return failed("Mohon isi No. Tlp!");
     }
 
-    // Set insert-wait state
-    dispatch(setWaitUserTokoInsert(true));
+    // Tidak menulis password
+    if (password.val().length < 1) {
+      // Terminate task
+      return failed("Mohon isi No. Password!");
+    }
 
-    const data: TokoInterface = {
+    // Set insert-wait state
+    dispatch(setWaitUserKasirInsert(true));
+
+    const data: KasirInterface = {
       nama: capitalizeEachWord(nama.val()),
       alamat: capitalizeFirstChar(alamat.val()),
       tlp: tlp.val(),
@@ -100,7 +102,7 @@ export function UserTokoInsertForm(): ReactNode {
     };
 
     try {
-      const d = await insertToko(data);
+      const d = await insertKasir(data);
       console.log(d);
     } catch (err: any) {
       // Free user error code = 401
@@ -111,8 +113,7 @@ export function UserTokoInsertForm(): ReactNode {
   }
 
   function closeForm() {
-    // No need to reset the form, because its component is removed when open-state is off
-    dispatch(closeUserTokoInsertForm());
+    dispatch(closeUserKasirInsertForm());
   }
 
   useEffect(() => {
@@ -120,7 +121,7 @@ export function UserTokoInsertForm(): ReactNode {
     // - First load (opened form), set focus to nama input
     // - When alert is closed, after displaying error message,
     //   set to which input is empty.
-    const { nama, alamat, tlp } = getInputs();
+    const { nama, alamat, tlp, password } = getInputs();
     switch (true) {
       case nama.val().length < 1:
         nama.focus();
@@ -131,14 +132,20 @@ export function UserTokoInsertForm(): ReactNode {
       case tlp.val().length < 1:
         tlp.focus();
         break;
+      case password.val().length < 1:
+        password.focus();
+        break;
     }
   }, [alertState.opened]);
 
   return (
     <div id="Insert-Form-Container">
       <div id="Insert-Form">
+        {/* Hidden Input */}
+        <input type="hidden" name="tokoId" />
+
         <div id="Form-Header">
-          <h3>Buat Toko Baru</h3>
+          <h3>Buat Kasir Baru</h3>
         </div>
         <div className="Form-Group">
           <label>Nama</label>
@@ -146,11 +153,15 @@ export function UserTokoInsertForm(): ReactNode {
         </div>
         <div className="Form-Group">
           <label>Alamat</label>
-          <input type="text" autoComplete="off" name="alamat" />
+          <input type="number" name="alamat" />
         </div>
         <div className="Form-Group">
           <label>No. Tlp</label>
-          <input type="number" autoComplete="off" name="tlp" />
+          <input type="number" name="tlp" />
+        </div>
+        <div className="Form-Group">
+          <label>Password</label>
+          <input type="number" name="password" />
         </div>
         <div id="Form-Button">
           <button onClick={save}>Simpan</button>

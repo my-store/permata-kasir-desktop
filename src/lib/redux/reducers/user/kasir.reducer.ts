@@ -1,33 +1,33 @@
 /* ===========================================================
-|  LIBRARY - REDUX USER TOKO STATE
+|  LIBRARY - REDUX USER KASIR STATE
 |  ===========================================================
-|  State user-toko.
+|  State user-kasir.
 |  -----------------------------------------------------------
 |  Jangan lupa untuk memperbarui dokumen ini
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
-|  Created At: 4-Feb-2026
+|  Created At: 9-Feb-2026
 |  Updated At: 11-Feb-2026
 */
 
 // Node Modules
 import { createSlice } from "@reduxjs/toolkit";
 
-// Libraries
+// Interfaces
+import { KasirInterface } from "../../../interfaces/database.interface";
 import { ReduxActionInterface } from "../../../interfaces/redux.interface";
-import { TokoInterface } from "../../../interfaces/database.interface";
 
-interface UserTokoInsertInterface {
+interface UserKasirInsertInterface {
   opened: boolean;
   wait: boolean;
 }
 
-interface UserTokoInterface {
-  list: TokoInterface[];
-  insert: UserTokoInsertInterface;
+interface UserKasirInterface {
+  list: KasirInterface[];
+  insert: UserKasirInsertInterface;
 }
 
-const DefaultTokoState: UserTokoInterface = {
+const DefaultKasirState: UserKasirInterface = {
   list: [],
   insert: {
     opened: false,
@@ -36,57 +36,57 @@ const DefaultTokoState: UserTokoInterface = {
 };
 
 function SetListHandler(
-  state: UserTokoInterface,
+  state: UserKasirInterface,
   action: ReduxActionInterface,
 ) {
   state.list = action.payload;
 }
 
 function AddNewListItemHandler(
-  state: UserTokoInterface,
+  state: UserKasirInterface,
   action: ReduxActionInterface,
 ) {
   state.list = [...state.list, action.payload];
 }
 
-function OpenInsertFormHandler(state: UserTokoInterface) {
+function OpenInsertFormHandler(state: UserKasirInterface) {
   state.insert.opened = true;
 }
 
-function CloseInsertFormHandler(state: UserTokoInterface) {
+function CloseInsertFormHandler(state: UserKasirInterface) {
   state.insert.opened = false;
 }
 
 function SetInsertWaitHandler(
-  state: UserTokoInterface,
+  state: UserKasirInterface,
   action: ReduxActionInterface,
 ) {
   state.insert.wait = action.payload;
 }
 
-const UserTokoReducer = createSlice({
-  name: "user.toko",
-  initialState: DefaultTokoState,
+const UserKasirReducer = createSlice({
+  name: "user.kasir",
+  initialState: DefaultKasirState,
   reducers: {
     // List
-    setUserTokoList: SetListHandler,
-    addNewUserTokoListItem: AddNewListItemHandler,
+    setUserKasirList: SetListHandler,
+    addNewUserKasirListItem: AddNewListItemHandler,
 
     // Insert Form
-    openUserTokoInsertForm: OpenInsertFormHandler,
-    closeUserTokoInsertForm: CloseInsertFormHandler,
-    setWaitUserTokoInsert: SetInsertWaitHandler,
+    openUserKasirInsertForm: OpenInsertFormHandler,
+    closeUserKasirInsertForm: CloseInsertFormHandler,
+    setWaitUserKasirInsert: SetInsertWaitHandler,
   },
 });
 
 export const {
   // List
-  setUserTokoList,
-  addNewUserTokoListItem,
+  setUserKasirList,
+  addNewUserKasirListItem,
 
   // Insert Form
-  openUserTokoInsertForm,
-  closeUserTokoInsertForm,
-  setWaitUserTokoInsert,
-} = UserTokoReducer.actions;
-export default UserTokoReducer.reducer;
+  openUserKasirInsertForm,
+  closeUserKasirInsertForm,
+  setWaitUserKasirInsert,
+} = UserKasirReducer.actions;
+export default UserKasirReducer.reducer;

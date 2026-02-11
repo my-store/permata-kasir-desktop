@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 4-Feb-2026
+|  Updated At: 9-Feb-2026
 */
 
 // Node Modules
@@ -33,7 +33,7 @@ import { getAllProduk } from "./_func";
 // Forms
 import { UserProdukInsertForm } from "./insert";
 
-interface TemplateInterface {
+interface PageInterface {
   data: ProdukInterface[];
   isPending: boolean;
 }
@@ -58,7 +58,7 @@ function Item({ data }: any): ReactNode {
   );
 }
 
-function Template({ data, isPending }: TemplateInterface): ReactNode {
+function Page({ data, isPending }: PageInterface): ReactNode {
   const state = useSelector((state: ReduxRootStateType) => state.user_produk);
   const dispatch = useDispatch();
 
@@ -69,13 +69,15 @@ function Template({ data, isPending }: TemplateInterface): ReactNode {
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
       {ready && <Item data={data} />}
-      <FiPlus
-        className="Add-New-Btn"
-        title="Buat produk baru"
-        size={"1.5rem"}
-        onClick={() => dispatch(openUserProdukInsertForm())}
-      />
-      {state.insert.opened && <UserProdukInsertForm />}
+      {ready && (
+        <FiPlus
+          className="Add-New-Btn"
+          title="Buat produk baru"
+          size={"1.5rem"}
+          onClick={() => dispatch(openUserProdukInsertForm())}
+        />
+      )}
+      {ready && state.insert.opened && <UserProdukInsertForm />}
     </div>
   );
 }
@@ -87,9 +89,5 @@ export function Produk(): ReactNode {
     queryFn: getAllProduk,
   });
 
-  return (
-    <div id="Produk">
-      <Template data={query.data ?? []} isPending={query.isPending} />
-    </div>
-  );
+  return <Page data={query.data ?? []} isPending={query.isPending} />;
 }

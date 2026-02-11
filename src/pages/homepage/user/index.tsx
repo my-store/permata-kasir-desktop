@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 9-Feb-2026
 */
 
 // Libraries
@@ -48,9 +48,10 @@ import { Member } from "./member";
 import { Produk } from "./produk";
 import { Diskon } from "./diskon";
 import { Modal } from "./modal";
+import { Kasir } from "./kasir";
+import { Toko } from "./toko";
 import { Jasa } from "./jasa";
 import { Bank } from "./bank";
-import { Toko } from "./toko";
 
 // User Settings
 import { UserSettings } from "./settings";
@@ -114,6 +115,14 @@ export const UserRoutes: any[] = [
     element: (props: any) => (
       <UserGlobalTemplates {...props}>
         <Toko />
+      </UserGlobalTemplates>
+    ),
+  },
+  {
+    path: "/user/kasir",
+    element: (props: any) => (
+      <UserGlobalTemplates {...props}>
+        <Kasir />
       </UserGlobalTemplates>
     ),
   },

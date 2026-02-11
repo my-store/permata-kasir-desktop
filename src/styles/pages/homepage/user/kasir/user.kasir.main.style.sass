@@ -1,0 +1,24 @@
+@use "../../../../root-vars" as *
+// @use "../../../../root-mixin" as *
+
+#User
+    #User-Kasir
+        #Items-Container
+            width: 100%
+            height: 96vh
+
+            #Empty-Message
+                width: 100%
+                line-height: 95vh
+                text-align: center
+                color: #7a7a7a
+
+        .Add-New-Btn
+            position: absolute
+            bottom: 3vh
+            right: 2vw
+            cursor: pointer
+            color: $primary-color
+
+            &:hover
+                color: #000

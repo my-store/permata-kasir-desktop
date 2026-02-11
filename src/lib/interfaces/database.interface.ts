@@ -27,6 +27,8 @@ export interface KasirInterface {
   alamat?: string;
   tlp?: string;
   foto?: string;
+  tokoId?: number;
+  userId?: number;
   createdAt?: string;
   updatedAt?: string;
 }
