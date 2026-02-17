@@ -41,6 +41,38 @@
                         height: 2rem
                         width: 100%
 
+                        // Hide file input
+                        &:is([type="file"])
+                            height: 0
+                            width: 0
+                            opacity: 0
+
+                    select
+                        @include rm-def-input-styles
+                        cursor: pointer
+                        background-color: #d4d4d4
+                        height: 2rem
+                        width: 100%
+
+                        &:hover
+                            background-color: #c8c8c8
+
+                    #Foto-Preview
+                        width: 8vw
+                        height: 8vw
+                        border-radius: 0.5rem
+                        background-color: #c5c5c5
+                        cursor: pointer
+                        background-repeat: no-repeat
+                        background-position: center
+                        background-size: contain
+
+                        &:hover
+                            opacity: .8
+
+                .Foto-Preview-Container
+                    @include flex-center(column)
+
                 #Form-Button
                     @include flex-just-right
                     padding: 1rem 0.5rem 1.5rem 0

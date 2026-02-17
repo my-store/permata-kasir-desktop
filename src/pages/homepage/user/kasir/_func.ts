@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 11-Feb-2026
+|  Updated At: 13-Feb-2026
 */
 
 // Libraries
@@ -45,7 +45,11 @@ export async function getOneKasir(
 export async function insertKasir(data: any): Promise<KasirInterface | null> {
   let kasir: KasirInterface | null = null;
   try {
-    const req: AxiosResponse = await api.post(KASIR_URL, data, includeToken());
+    const req: AxiosResponse = await api.postForm(
+      KASIR_URL,
+      data,
+      includeToken(),
+    );
     kasir = req.data;
   } catch (err: any) {
     // Trying to handle error

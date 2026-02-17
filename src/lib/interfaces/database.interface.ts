@@ -26,6 +26,7 @@ export interface KasirInterface {
   nama?: string;
   alamat?: string;
   tlp?: string;
+  password?: string;
   foto?: string;
   tokoId?: number;
   userId?: number;

@@ -7,18 +7,22 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 11-Feb-2026
+|  Updated At: 13-Feb-2026
 */
 
 // Node Modules
 import { createSlice } from "@reduxjs/toolkit";
 
 // Interfaces
-import { KasirInterface } from "../../../interfaces/database.interface";
+import {
+  KasirInterface,
+  TokoInterface,
+} from "../../../interfaces/database.interface";
 import { ReduxActionInterface } from "../../../interfaces/redux.interface";
 
 interface UserKasirInsertInterface {
   opened: boolean;
+  tokoList: TokoInterface[];
   wait: boolean;
 }
 
@@ -31,6 +35,7 @@ const DefaultKasirState: UserKasirInterface = {
   list: [],
   insert: {
     opened: false,
+    tokoList: [],
     wait: false,
   },
 };
@@ -57,6 +62,13 @@ function CloseInsertFormHandler(state: UserKasirInterface) {
   state.insert.opened = false;
 }
 
+function SetInsertTokoListHandler(
+  state: UserKasirInterface,
+  action: ReduxActionInterface,
+) {
+  state.insert.tokoList = action.payload;
+}
+
 function SetInsertWaitHandler(
   state: UserKasirInterface,
   action: ReduxActionInterface,
@@ -75,6 +87,7 @@ const UserKasirReducer = createSlice({
     // Insert Form
     openUserKasirInsertForm: OpenInsertFormHandler,
     closeUserKasirInsertForm: CloseInsertFormHandler,
+    setTokoListUserKasirInsert: SetInsertTokoListHandler,
     setWaitUserKasirInsert: SetInsertWaitHandler,
   },
 });
@@ -87,6 +100,7 @@ export const {
   // Insert Form
   openUserKasirInsertForm,
   closeUserKasirInsertForm,
+  setTokoListUserKasirInsert,
   setWaitUserKasirInsert,
 } = UserKasirReducer.actions;
 export default UserKasirReducer.reducer;
