@@ -7,14 +7,19 @@
     .Settings
         @include flex-just-center
         background-color: semi-transparent(#000, 0.2)
-        height: $window-height
         width: 100%
+        height: $window-height
         position: fixed
         left: 0
         top: 0
-        z-index: 3
-        // Blur the container only
+        z-index: 4
+        padding-top: 100vh
         backdrop-filter: blur(10px)
+        opacity: 0
+        visibility: hidden
+
+        animation-name: Settings-Anim
+        animation-duration: 0.3s
 
         #Box
             @include shadow
@@ -72,3 +77,18 @@
 
                 #Contents
                     padding: 0.2rem 0.4rem 0.2rem 0.4rem
+
+    .Settings-Active
+        opacity: 1
+        visibility: visible
+        padding-top: 0vh
+
+    @keyframes Settings-Anim
+        from
+            opacity: 0
+            visibility: hidden
+            padding-top: 100vh
+        to
+            opacity: 1
+            visibility: visible
+            padding-top: 0vh

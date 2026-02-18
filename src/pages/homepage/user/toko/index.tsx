@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 9-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 // Node Modules
@@ -124,7 +124,7 @@ function Page({ data, isPending }: PageInterface): ReactNode {
 
   const ready: boolean = !isPending;
   return (
-    <div id="Toko">
+    <div id="User-Toko">
       {/* Loading */}
       {isPending && (
         <ContentLoading style={{ width: "100%", height: "100vh" }} />

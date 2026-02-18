@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 5-Feb-2026
-|  Updated At: 11-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 // Node Modules
@@ -135,8 +135,8 @@ export function UserTokoInsertForm(): ReactNode {
   }, [alertState.opened]);
 
   return (
-    <div id="Insert-Form-Container">
-      <div id="Insert-Form">
+    <div className="User-Toko-Insert-Form-Container User-Toko-Insert-Form-Container-Active">
+      <div id="User-Toko-Insert-Form">
         <div id="Form-Header">
           <h3>Buat Toko Baru</h3>
         </div>

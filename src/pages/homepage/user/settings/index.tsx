@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 2-Feb-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 // Node Modules
 import { useDispatch /*, useSelector */ } from "react-redux";
-import { ReactNode, useState } from "react";
+import { ReactNode /*, useEffect */, useState } from "react";
 
 // Libraries
 import { closeUserSettings } from "../../../../lib/redux/reducers/user/settings.reducer";
@@ -43,7 +43,7 @@ export function UserSettings(): ReactNode {
   const dispatch = useDispatch();
 
   return (
-    <div className={"Settings"}>
+    <div className="Settings Settings-Active">
       <div id="Box">
         <div id="Header">
           <p id="Label">Pengaturan</p>

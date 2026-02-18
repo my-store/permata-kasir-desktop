@@ -4,19 +4,23 @@
 
 #User
     #User-Kasir
-        #Insert-Form-Container
+        .User-Kasir-Insert-Form-Container
             @include flex-just-center
+            background-color: semi-transparent(#000, 0.2)
             width: 100%
-            height: 100vh
+            height: $window-height
             position: fixed
             left: 0px
             top: 0px
             z-index: 4
-            background-color: semi-transparent(#000, 0.2)
-            // Blur the container only
+            padding-top: 100vh
             backdrop-filter: blur(10px)
+            opacity: 0
+            visibility: hidden
+            animation-name: User-Kasir-Insert-Form-Container-Anim
+            animation-duration: 0.3s
 
-            #Insert-Form
+            #User-Kasir-Insert-Form
                 @include shadow
                 border-radius: 0.3rem
                 width: 35vw
@@ -87,3 +91,18 @@
 
                         &:not(:nth-last-child(1))
                             margin-right: 0.5rem
+
+        .User-Kasir-Insert-Form-Container-Active
+            opacity: 1
+            visibility: visible
+            padding-top: 0vh
+
+        @keyframes User-Kasir-Insert-Form-Container-Anim
+            from
+                opacity: 0
+                visibility: hidden
+                padding-top: 100vh
+            to
+                opacity: 1
+                visibility: visible
+                padding-top: 0vh

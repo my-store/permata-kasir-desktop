@@ -218,8 +218,8 @@ export function UserKasirInsertForm(): ReactNode {
   }, [alertState.opened]);
 
   return (
-    <div id="Insert-Form-Container">
-      <div id="Insert-Form">
+    <div className="User-Kasir-Insert-Form-Container User-Kasir-Insert-Form-Container-Active">
+      <div id="User-Kasir-Insert-Form">
         {/* Header | Title */}
         <div id="Form-Header">
           <h3>Buat Kasir Baru</h3>
