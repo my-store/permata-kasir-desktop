@@ -13,7 +13,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { getLoginCredentials, refreshToken } from "./credentials";
 import { SERVER_URL } from "../constants/server.constant";
-import { Log } from "./log";
+import { Error, Warn } from "./log";
 
 // Axios Instance
 export const api: AxiosInstance = axios.create({ baseURL: SERVER_URL });
@@ -46,14 +46,27 @@ export async function errHandler(
       try {
         await refreshToken(oldToken);
       } catch (rtErr) {
-        // Display log in the console
-        Log("Gagal memperbarui token.");
+        // Display error message in the console
+        Error("Gagal memperbarui token.\n-> api.errHandler");
         // Return to the caller try-catch block
         throw rtErr;
       }
       // Recall callback
       return callback(...args);
     }
+
+    // Token is not found, maybe deleted or something unknown error
+    else {
+      // Display warning message in the console
+      Warn(
+        "Token (data login) tidak ditemukan, mungkin telah terhapus.\n-> api.errHandler",
+      );
+    }
+  }
+
+  // Unhandled error
+  else {
+    Warn("Unhandled error\n-> api.errHandler");
   }
 
   // Display unhandled error
