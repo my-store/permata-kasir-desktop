@@ -5,13 +5,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 17-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 // Node Modules
+import { CSSProperties, ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { CSSProperties, ReactNode } from "react";
 import { UserKasirInsertForm } from "./insert";
 import { FiPlus } from "react-icons/fi";
 
@@ -22,6 +22,7 @@ import { errorSound } from "../../../../lib/constants/media.constant";
 import {
   setTokoListUserKasirInsert,
   openUserKasirInsertForm,
+  setUserKasirList,
 } from "../../../../lib/redux/reducers/user/kasir.reducer";
 import {
   KasirInterface,
@@ -56,7 +57,10 @@ function Item({ dataKasir }: any): ReactNode {
 
   return (
     <div id="Items-Container" style={containerStyle}>
+      {/* Empty Data */}
       {dataKasir.length < 1 && <p id="Empty-Message">Belum ada kasir</p>}
+
+      {/* Data */}
       {dataKasir.map((d: KasirInterface, dx: number) => (
         <p key={dx}>{d.nama}</p>
       ))}
@@ -111,6 +115,9 @@ function Page({ dataKasir, dataToko, isPending }: PageInterface): ReactNode {
 
 // Entry Point
 export function Kasir(): ReactNode {
+  const { list } = useSelector((state: ReduxRootStateType) => state.user_kasir);
+  const dispatch = useDispatch();
+
   const query = {
     getAllKasir: useQuery({
       queryKey: ["user.kasir.getAll"],
@@ -122,12 +129,18 @@ export function Kasir(): ReactNode {
     }),
   };
 
+  useEffect(() => {
+    if (query.getAllKasir.data) {
+      dispatch(setUserKasirList(query.getAllKasir.data));
+    }
+  }, [query.getAllKasir.data]);
+
   const pending: boolean =
     query.getAllKasir.isPending == true || query.getAllToko.isPending == true;
 
   return (
     <Page
-      dataKasir={query.getAllKasir.data ?? []}
+      dataKasir={list}
       dataToko={query.getAllToko.data ?? []}
       isPending={pending}
     />

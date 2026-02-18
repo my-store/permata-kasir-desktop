@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 13-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 // Libraries
@@ -24,7 +24,13 @@ export async function getWhereKasir(args: string): Promise<KasirInterface[]> {
     const req: AxiosResponse = await api.get(KASIR_URL + args, includeToken());
     kasir = req.data;
   } catch (err) {
-    await errHandler(err, getWhereKasir, [args]);
+    // Trying to handle error
+    try {
+      await errHandler(err, getWhereKasir, [args]);
+    } catch (errHnd) {
+      // Failed to handle error
+      throw errHnd;
+    }
   }
   return kasir;
 }
@@ -37,7 +43,13 @@ export async function getOneKasir(
     const req: AxiosResponse = await api.get(KASIR_URL + args, includeToken());
     kasir = req.data;
   } catch (err) {
-    await errHandler(err, getOneKasir, [args]);
+    // Trying to handle error
+    try {
+      await errHandler(err, getOneKasir, [args]);
+    } catch (errHnd) {
+      // Failed to handle error
+      throw errHnd;
+    }
   }
   return kasir;
 }
@@ -56,7 +68,7 @@ export async function insertKasir(data: any): Promise<KasirInterface | null> {
     try {
       await errHandler(err, insertKasir, [data]);
     } catch (unhandledErr) {
-      // Handle error inside save function in insert/index.tsx file
+      // Failed to handle error
       throw unhandledErr;
     }
   }

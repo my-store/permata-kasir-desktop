@@ -7,12 +7,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { getLoginCredentials, refreshToken } from "./credentials";
 import { SERVER_URL } from "../constants/server.constant";
+import { Log } from "./log";
 
 // Axios Instance
 export const api: AxiosInstance = axios.create({ baseURL: SERVER_URL });
@@ -45,6 +46,9 @@ export async function errHandler(
       try {
         await refreshToken(oldToken);
       } catch (rtErr) {
+        // Display log in the console
+        Log("Gagal memperbarui token.");
+        // Return to the caller try-catch block
         throw rtErr;
       }
       // Recall callback

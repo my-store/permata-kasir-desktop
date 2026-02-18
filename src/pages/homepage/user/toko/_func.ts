@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 7-Feb-2026
+|  Updated At: 18-Feb-2026
 */
 
 // Libraries
@@ -36,7 +36,7 @@ export async function getWhereToko(args: string): Promise<TokoInterface[]> {
     try {
       await errHandler(err, getWhereToko, [args]);
     } catch (unhandledErr) {
-      // Handle error inside save function in insert/index.tsx file
+      // Failed to handle error
       throw unhandledErr;
     }
   }
@@ -53,7 +53,7 @@ export async function getOneToko(args: string): Promise<TokoInterface | null> {
     try {
       await errHandler(err, getOneToko, [args]);
     } catch (unhandledErr) {
-      // Handle error inside save function in insert/index.tsx file
+      // Failed to handle error
       throw unhandledErr;
     }
   }
@@ -70,7 +70,7 @@ export async function insertToko(data: any): Promise<TokoInterface | null> {
     try {
       await errHandler(err, insertToko, [data]);
     } catch (unhandledErr) {
-      // Handle error inside save function in insert/index.tsx file
+      // Failed to handle error
       throw unhandledErr;
     }
   }
