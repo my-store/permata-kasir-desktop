@@ -5,14 +5,16 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 18-Feb-2026
+|  Updated At: 19-Feb-2026
 */
+
+// Node Modules
+import { AxiosResponse } from "axios";
 
 // Libraries
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
-import { api, errHandler, includeToken } from "../../../../lib/system/api";
+import { includeToken, fixApiError, api } from "../../../../lib/system/api";
 import { TOKO_URL } from "../../../../lib/constants/server.constant";
-import { AxiosResponse } from "axios";
 
 export async function getAllToko(): Promise<TokoInterface[]> {
   const select: any = {
@@ -34,7 +36,7 @@ export async function getWhereToko(args: string): Promise<TokoInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await errHandler(err, getWhereToko, [args]);
+      await fixApiError(err);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -51,7 +53,7 @@ export async function getOneToko(args: string): Promise<TokoInterface | null> {
   } catch (err) {
     // Trying to handle error
     try {
-      await errHandler(err, getOneToko, [args]);
+      await fixApiError(err);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -65,10 +67,10 @@ export async function insertToko(data: any): Promise<TokoInterface | null> {
   try {
     const req: AxiosResponse = await api.post(TOKO_URL, data, includeToken());
     toko = req.data;
-  } catch (err: any) {
+  } catch (err) {
     // Trying to handle error
     try {
-      await errHandler(err, insertToko, [data]);
+      await fixApiError(err);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

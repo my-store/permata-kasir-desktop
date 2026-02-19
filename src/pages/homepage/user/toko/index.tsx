@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 18-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Node Modules
@@ -123,6 +123,7 @@ function Page({ data, isPending }: PageInterface): ReactNode {
   }
 
   const ready: boolean = !isPending;
+
   return (
     <div id="User-Toko">
       {/* Loading */}
@@ -156,16 +157,16 @@ export function Toko(): ReactNode {
   const { list } = useSelector((state: ReduxRootStateType) => state.user_toko);
   const dispatch = useDispatch();
 
-  const { isPending, data } = useQuery({
+  const { status, data, isPending } = useQuery({
     queryKey: ["user.toko.getAll"],
     queryFn: getAllToko,
   });
 
   useEffect(() => {
-    if (data) {
+    if (status == "success" && data) {
       dispatch(setUserTokoList(data));
     }
-  }, [data]);
+  }, [status, data]);
 
   return <Page data={list} isPending={isPending} />;
 }

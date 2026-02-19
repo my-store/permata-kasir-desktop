@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 31-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Libraries
 import { MemberInterface } from "../../../../lib/interfaces/database.interface";
-import { errHandler, api, includeToken } from "../../../../lib/system/api";
+import { api, fixApiError, includeToken } from "../../../../lib/system/api";
 import { MEMBER_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -24,7 +24,13 @@ export async function getWhereMember(args: string): Promise<MemberInterface[]> {
     const req: AxiosResponse = await api.get(MEMBER_URL + args, includeToken());
     member = req.data;
   } catch (err) {
-    await errHandler(err, getWhereMember, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return member;
 }
@@ -37,7 +43,13 @@ export async function getOneMember(
     const req: AxiosResponse = await api.get(MEMBER_URL + args, includeToken());
     member = req.data;
   } catch (err) {
-    await errHandler(err, getOneMember, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return member;
 }

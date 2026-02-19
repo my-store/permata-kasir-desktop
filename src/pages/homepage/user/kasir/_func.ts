@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 18-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Libraries
 import { KasirInterface } from "../../../../lib/interfaces/database.interface";
-import { errHandler, api, includeToken } from "../../../../lib/system/api";
+import { api, includeToken, fixApiError } from "../../../../lib/system/api";
 import { KASIR_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -26,10 +26,10 @@ export async function getWhereKasir(args: string): Promise<KasirInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await errHandler(err, getWhereKasir, [args]);
-    } catch (errHnd) {
+      await fixApiError(err);
+    } catch (unhandledErr) {
       // Failed to handle error
-      throw errHnd;
+      throw unhandledErr;
     }
   }
   return kasir;
@@ -45,10 +45,10 @@ export async function getOneKasir(
   } catch (err) {
     // Trying to handle error
     try {
-      await errHandler(err, getOneKasir, [args]);
-    } catch (errHnd) {
+      await fixApiError(err);
+    } catch (unhandledErr) {
       // Failed to handle error
-      throw errHnd;
+      throw unhandledErr;
     }
   }
   return kasir;
@@ -63,10 +63,10 @@ export async function insertKasir(data: any): Promise<KasirInterface | null> {
       includeToken(),
     );
     kasir = req.data;
-  } catch (err: any) {
+  } catch (err) {
     // Trying to handle error
     try {
-      await errHandler(err, insertKasir, [data]);
+      await fixApiError(err);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

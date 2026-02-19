@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 18-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Node Modules
@@ -130,10 +130,10 @@ export function Kasir(): ReactNode {
   };
 
   useEffect(() => {
-    if (query.getAllKasir.data) {
+    if (query.getAllKasir.status == "success" && query.getAllKasir.data) {
       dispatch(setUserKasirList(query.getAllKasir.data));
     }
-  }, [query.getAllKasir.data]);
+  }, [query.getAllKasir.status, query.getAllKasir.data]);
 
   const pending: boolean =
     query.getAllKasir.isPending == true || query.getAllToko.isPending == true;

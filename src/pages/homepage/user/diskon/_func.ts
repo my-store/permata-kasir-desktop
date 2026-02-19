@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Libraries
 import { DiskonInterface } from "../../../../lib/interfaces/database.interface";
-import { errHandler, api, includeToken } from "../../../../lib/system/api";
+import { api, fixApiError, includeToken } from "../../../../lib/system/api";
 import { DISKON_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -24,7 +24,13 @@ export async function getWhereDiskon(args: string): Promise<DiskonInterface[]> {
     const req: AxiosResponse = await api.get(DISKON_URL + args, includeToken());
     diskon = req.data;
   } catch (err) {
-    await errHandler(err, getWhereDiskon, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return diskon;
 }
@@ -37,7 +43,13 @@ export async function getOneDiskon(
     const req: AxiosResponse = await api.get(DISKON_URL + args, includeToken());
     diskon = req.data;
   } catch (err) {
-    await errHandler(err, getOneDiskon, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return diskon;
 }

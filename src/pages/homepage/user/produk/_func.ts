@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 31-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Libraries
 import { ProdukInterface } from "../../../../lib/interfaces/database.interface";
-import { api, errHandler, includeToken } from "../../../../lib/system/api";
+import { api, fixApiError, includeToken } from "../../../../lib/system/api";
 import { PRODUK_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -24,7 +24,13 @@ export async function getWhereProduk(args: string): Promise<ProdukInterface[]> {
     const req: AxiosResponse = await api.get(PRODUK_URL + args, includeToken());
     produk = req.data;
   } catch (err) {
-    await errHandler(err, getWhereProduk, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return produk;
 }
@@ -37,7 +43,13 @@ export async function getOneProduk(
     const req: AxiosResponse = await api.get(PRODUK_URL + args, includeToken());
     produk = req.data;
   } catch (err) {
-    await errHandler(err, getOneProduk, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return produk;
 }

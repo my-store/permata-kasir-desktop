@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 18-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
@@ -28,47 +28,44 @@ export function includeToken(): AxiosRequestConfig {
 }
 
 // Api Error Handler
-export async function errHandler(
-  err: any,
-  callback: Function,
-  args: any[],
-): Promise<void> {
+export async function fixApiError(err: any): Promise<void> {
   const axiosErr = err as AxiosError;
   const { message }: any = axiosErr.response?.data;
 
-  // Token expired
-  if (message && message == "Unauthorized") {
-    // Get old token
-    const oldToken = getLoginCredentials();
-    // Make sure old token is still exits (not deleted)
-    if (oldToken) {
-      // Refresh token
-      try {
-        await refreshToken(oldToken);
-      } catch (rtErr) {
-        // Display error message in the console
-        Error("Gagal memperbarui token.\n-> api.errHandler");
-        // Return to the caller try-catch block
-        throw rtErr;
+  // Fix error by the message given from server
+  if (message) {
+    // Token expired
+    if (message == "Unauthorized") {
+      // Get the token from local storage
+      const token = getLoginCredentials();
+
+      if (!token) {
+        // Display warning message in the console
+        Warn(
+          "Token (data login) tidak ditemukan, mungkin telah terhapus.\n-> api.errHandler",
+        );
+
+        // Return to the caller catch block
+        throw err;
       }
-      // Recall callback
-      return callback(...args);
+
+      try {
+        // Refresh token
+        await refreshToken(token);
+        /*
+        |
+        */
+      } catch (refrestTokenError) {
+        // Display error message in the console
+        Error("Gagal memperbarui token.\n-> api.fixApiError");
+
+        // Return to the caller catch block
+        throw refrestTokenError;
+      }
     }
 
-    // Token is not found, maybe deleted or something unknown error
-    else {
-      // Display warning message in the console
-      Warn(
-        "Token (data login) tidak ditemukan, mungkin telah terhapus.\n-> api.errHandler",
-      );
-    }
+    /* Another error handler by message */
   }
 
-  // Unhandled error
-  else {
-    Warn("Unhandled error\n-> api.errHandler");
-  }
-
-  // Display unhandled error
-  throw axiosErr.response?.data;
+  /* Another method of error handler */
 }

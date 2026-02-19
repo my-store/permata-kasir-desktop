@@ -5,12 +5,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 31-Jan-2026
-|  Updated At: 6-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Libraries
 import { JasaInterface } from "../../../../lib/interfaces/database.interface";
-import { errHandler, api, includeToken } from "../../../../lib/system/api";
+import { api, fixApiError, includeToken } from "../../../../lib/system/api";
 import { JASA_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -24,7 +24,13 @@ export async function getWhereJasa(args: string): Promise<JasaInterface[]> {
     const req: AxiosResponse = await api.get(JASA_URL + args, includeToken());
     jasa = req.data;
   } catch (err) {
-    await errHandler(err, getWhereJasa, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return jasa;
 }
@@ -35,7 +41,13 @@ export async function getOneJasa(args: string): Promise<JasaInterface | null> {
     const req: AxiosResponse = await api.get(JASA_URL + args, includeToken());
     jasa = req.data;
   } catch (err) {
-    await errHandler(err, getOneJasa, [args]);
+    // Trying to handle error
+    try {
+      await fixApiError(err);
+    } catch (unhandledErr) {
+      // Failed to handle error
+      throw unhandledErr;
+    }
   }
   return jasa;
 }
