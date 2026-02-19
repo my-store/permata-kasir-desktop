@@ -87,3 +87,23 @@ export function emptyInputCheck(parent: string) {
   // Return the result status and message
   return result;
 }
+
+export function getInputs(parent: string): any {
+  // Detected input default value
+  let inputFound: any = {};
+
+  // Try to find/ detect all input inside the parent
+  const inputs: JQuery<HTMLInputElement[] | any> = $(`${parent} input`);
+
+  for (let i of inputs) {
+    // Get the input name
+    const inputName: string = $(i).prop("name");
+    // Check if input is not file
+    const notFile: boolean = $(i).prop("type") != "file";
+    // Set input key name with its input object,
+    // for file input need to add [0] at the end.
+    inputFound[inputName] = notFile ? $(i) : $(i)[0];
+  }
+
+  return inputFound;
+}

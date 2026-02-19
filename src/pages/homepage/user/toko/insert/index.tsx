@@ -11,7 +11,6 @@
 // Node Modules
 import { useDispatch, useSelector } from "react-redux";
 import { ReactNode, useEffect } from "react";
-import $ from "jquery";
 
 // Libraries
 import { TokoInterface } from "../../../../../lib/interfaces/database.interface";
@@ -23,6 +22,7 @@ import {
   closeUserTokoInsertForm,
   setWaitUserTokoInsert,
 } from "../../../../../lib/redux/reducers/user/toko.reducer";
+import { getInputs } from "../../../../../lib/dom";
 import {
   capitalizeFirstChar,
   capitalizeEachWord,
@@ -40,13 +40,6 @@ export function UserTokoInsertForm(): ReactNode {
     (state: ReduxRootStateType) => state.user_toko,
   );
   const dispatch = useDispatch();
-
-  function getInputs(): any {
-    const nama: JQuery<HTMLInputElement | any> = $("input[name='nama']");
-    const alamat: JQuery<HTMLInputElement | any> = $("input[name='alamat']");
-    const tlp: JQuery<HTMLInputElement | any> = $("input[name='tlp']");
-    return { nama, alamat, tlp };
-  }
 
   function failed(msg: string): void {
     // Play error sound
@@ -67,7 +60,7 @@ export function UserTokoInsertForm(): ReactNode {
     }
 
     const cred = getLoginCredentials();
-    const { nama, alamat, tlp } = getInputs();
+    const { nama, alamat, tlp } = getInputs("#User-Toko-Insert-Form");
 
     // Tidak menulis nama
     if (nama.val().length < 1) {
@@ -118,7 +111,7 @@ export function UserTokoInsertForm(): ReactNode {
   // First open
   useEffect(() => {
     // Get the nama input
-    const { nama } = getInputs();
+    const { nama } = getInputs("#User-Toko-Insert-Form");
     // Wait until nama input is found
     setTimeout(() => {
       // Make sure nama uinput is founded
@@ -135,7 +128,7 @@ export function UserTokoInsertForm(): ReactNode {
     // - First load (opened form), set focus to nama input
     // - When alert is closed, after displaying error message,
     //   set to which input is empty.
-    const { nama, alamat, tlp } = getInputs();
+    const { nama, alamat, tlp } = getInputs("#User-Toko-Insert-Form");
     switch (true) {
       case nama.val().length < 1:
         nama.focus();

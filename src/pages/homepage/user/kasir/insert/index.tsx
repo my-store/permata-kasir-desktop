@@ -4,7 +4,7 @@
 |  Jangan lupa untuk memperbarui dokumen ini
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
-|  Created At: 19-Feb-2026
+|  Created At: 9-Feb-2026
 |  Updated At: 19-Feb-2026
 */
 
@@ -23,7 +23,7 @@ import { getLoginCredentials } from "../../../../../lib/system/credentials";
 import { openAlert } from "../../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../../lib/redux/store.redux";
 import { errorSound } from "../../../../../lib/constants/media.constant";
-import { emptyInputCheck, readImage } from "../../../../../lib/dom";
+import { emptyInputCheck, getInputs, readImage } from "../../../../../lib/dom";
 import {
   closeUserKasirInsertForm,
   addNewUserKasirListItem,
@@ -44,19 +44,6 @@ export function UserKasirInsertForm(): ReactNode {
   );
   const dispatch = useDispatch();
 
-  function getInputs(): any {
-    const nama: JQuery<HTMLInputElement | any> = $("input[name='nama']");
-    const alamat: JQuery<HTMLInputElement | any> = $("input[name='alamat']");
-    const tlp: JQuery<HTMLInputElement | any> = $("input[name='tlp']");
-    const password: JQuery<HTMLInputElement | any> = $(
-      "input[name='password']",
-    );
-    const tokoId: JQuery<HTMLSelectElement | any> = $("select[name='tokoId']");
-    const foto: JQuery<HTMLInputElement | any> | any =
-      $("input[name='foto']")[0];
-    return { nama, alamat, tlp, password, tokoId, foto };
-  }
-
   function failed(msg: string): void {
     // Play error sound
     errorSound.play();
@@ -75,10 +62,6 @@ export function UserKasirInsertForm(): ReactNode {
       return;
     }
 
-    const cred = getLoginCredentials();
-
-    const { nama, alamat, tlp, password, tokoId, foto } = getInputs();
-
     // Empty data checking ...
     const { status, message } = emptyInputCheck("#User-Kasir-Insert-Form");
     // Any empty data is detected
@@ -86,6 +69,10 @@ export function UserKasirInsertForm(): ReactNode {
       // Terminate task, and display the message
       return failed(message);
     }
+
+    const { nama, alamat, tlp, password, tokoId, foto } = getInputs(
+      "#User-Kasir-Insert-Form",
+    );
 
     // Empty image checking ...
     if (foto.files.length < 1) {
@@ -95,6 +82,8 @@ export function UserKasirInsertForm(): ReactNode {
 
     // Set insert-wait state
     dispatch(setWaitUserKasirInsert(true));
+
+    const cred = getLoginCredentials();
 
     const data = new FormData();
     data.append("nama", capitalizeEachWord(nama.val()));
@@ -146,17 +135,10 @@ export function UserKasirInsertForm(): ReactNode {
     dispatch(closeUserKasirInsertForm());
   }
 
-  // function updateImage(e: ChangeEvent<HTMLInputElement>): any {
-  //   readImage(e, (r: any) => {
-  //     const foto = $("#Foto-Preview");
-  //     foto.css("background-image", `url(${r})`);
-  //   });
-  // }
-
   // First open
   useEffect(() => {
     // Get the nama input
-    const { nama } = getInputs();
+    const { nama } = getInputs("#User-Kasir-Insert-Form");
     // Wait until nama input is found
     setTimeout(() => {
       // Make sure nama uinput is founded
@@ -170,7 +152,9 @@ export function UserKasirInsertForm(): ReactNode {
   // Input focus | Alert listener
   useEffect(() => {
     if (!alertState.opened) {
-      const { nama, alamat, tlp, password } = getInputs();
+      const { nama, alamat, tlp, password } = getInputs(
+        "#User-Kasir-Insert-Form",
+      );
       switch (true) {
         case nama.val().length < 1:
           nama.focus();
