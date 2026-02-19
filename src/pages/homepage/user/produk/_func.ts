@@ -10,7 +10,7 @@
 
 // Libraries
 import { ProdukInterface } from "../../../../lib/interfaces/database.interface";
-import { api, fixApiError, includeToken } from "../../../../lib/system/api";
+import { api, fixApiErr, includeToken } from "../../../../lib/system/api";
 import { PRODUK_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -18,7 +18,9 @@ export async function getAllProduk(): Promise<ProdukInterface[]> {
   return getWhereProduk("");
 }
 
-export async function getWhereProduk(args: string): Promise<ProdukInterface[]> {
+export async function getWhereProduk(
+  args: string,
+): Promise<ProdukInterface[] | any> {
   let produk: ProdukInterface[] = [];
   try {
     const req: AxiosResponse = await api.get(PRODUK_URL + args, includeToken());
@@ -26,7 +28,7 @@ export async function getWhereProduk(args: string): Promise<ProdukInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getWhereProduk, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -37,7 +39,7 @@ export async function getWhereProduk(args: string): Promise<ProdukInterface[]> {
 
 export async function getOneProduk(
   args: string,
-): Promise<ProdukInterface | null> {
+): Promise<ProdukInterface | any> {
   let produk: ProdukInterface | null = null;
   try {
     const req: AxiosResponse = await api.get(PRODUK_URL + args, includeToken());
@@ -45,7 +47,7 @@ export async function getOneProduk(
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getOneProduk, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

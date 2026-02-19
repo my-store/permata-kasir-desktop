@@ -10,7 +10,7 @@
 
 // Libraries
 import { KasirInterface } from "../../../../lib/interfaces/database.interface";
-import { api, includeToken, fixApiError } from "../../../../lib/system/api";
+import { api, includeToken, fixApiErr } from "../../../../lib/system/api";
 import { KASIR_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -18,7 +18,9 @@ export async function getAllKasir(): Promise<KasirInterface[]> {
   return getWhereKasir("");
 }
 
-export async function getWhereKasir(args: string): Promise<KasirInterface[]> {
+export async function getWhereKasir(
+  args: string,
+): Promise<KasirInterface[] | any> {
   let kasir: KasirInterface[] = [];
   try {
     const req: AxiosResponse = await api.get(KASIR_URL + args, includeToken());
@@ -26,7 +28,7 @@ export async function getWhereKasir(args: string): Promise<KasirInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getWhereKasir, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -35,9 +37,7 @@ export async function getWhereKasir(args: string): Promise<KasirInterface[]> {
   return kasir;
 }
 
-export async function getOneKasir(
-  args: string,
-): Promise<KasirInterface | null> {
+export async function getOneKasir(args: string): Promise<KasirInterface | any> {
   let kasir: KasirInterface | null = null;
   try {
     const req: AxiosResponse = await api.get(KASIR_URL + args, includeToken());
@@ -45,7 +45,7 @@ export async function getOneKasir(
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getOneKasir, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -54,7 +54,7 @@ export async function getOneKasir(
   return kasir;
 }
 
-export async function insertKasir(data: any): Promise<KasirInterface | null> {
+export async function insertKasir(data: any): Promise<KasirInterface | any> {
   let kasir: KasirInterface | null = null;
   try {
     const req: AxiosResponse = await api.postForm(
@@ -66,7 +66,7 @@ export async function insertKasir(data: any): Promise<KasirInterface | null> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, insertKasir, data);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

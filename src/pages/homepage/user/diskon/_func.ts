@@ -10,7 +10,7 @@
 
 // Libraries
 import { DiskonInterface } from "../../../../lib/interfaces/database.interface";
-import { api, fixApiError, includeToken } from "../../../../lib/system/api";
+import { api, fixApiErr, includeToken } from "../../../../lib/system/api";
 import { DISKON_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -18,7 +18,9 @@ export async function getAllDiskon(): Promise<DiskonInterface[]> {
   return getWhereDiskon("");
 }
 
-export async function getWhereDiskon(args: string): Promise<DiskonInterface[]> {
+export async function getWhereDiskon(
+  args: string,
+): Promise<DiskonInterface[] | any> {
   let diskon: DiskonInterface[] = [];
   try {
     const req: AxiosResponse = await api.get(DISKON_URL + args, includeToken());
@@ -26,7 +28,7 @@ export async function getWhereDiskon(args: string): Promise<DiskonInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getWhereDiskon, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -37,7 +39,7 @@ export async function getWhereDiskon(args: string): Promise<DiskonInterface[]> {
 
 export async function getOneDiskon(
   args: string,
-): Promise<DiskonInterface | null> {
+): Promise<DiskonInterface | any> {
   let diskon: DiskonInterface | null = null;
   try {
     const req: AxiosResponse = await api.get(DISKON_URL + args, includeToken());
@@ -45,7 +47,7 @@ export async function getOneDiskon(
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getOneDiskon, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

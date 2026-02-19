@@ -10,7 +10,7 @@
 
 // Libraries
 import { MemberInterface } from "../../../../lib/interfaces/database.interface";
-import { api, fixApiError, includeToken } from "../../../../lib/system/api";
+import { api, fixApiErr, includeToken } from "../../../../lib/system/api";
 import { MEMBER_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -18,7 +18,9 @@ export async function getAllMember(): Promise<MemberInterface[]> {
   return getWhereMember("");
 }
 
-export async function getWhereMember(args: string): Promise<MemberInterface[]> {
+export async function getWhereMember(
+  args: string,
+): Promise<MemberInterface[] | any> {
   let member: MemberInterface[] = [];
   try {
     const req: AxiosResponse = await api.get(MEMBER_URL + args, includeToken());
@@ -26,7 +28,7 @@ export async function getWhereMember(args: string): Promise<MemberInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getWhereMember, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -37,7 +39,7 @@ export async function getWhereMember(args: string): Promise<MemberInterface[]> {
 
 export async function getOneMember(
   args: string,
-): Promise<MemberInterface | null> {
+): Promise<MemberInterface | any> {
   let member: MemberInterface | null = null;
   try {
     const req: AxiosResponse = await api.get(MEMBER_URL + args, includeToken());
@@ -45,7 +47,7 @@ export async function getOneMember(
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getOneMember, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

@@ -13,7 +13,7 @@ import { AxiosResponse } from "axios";
 
 // Libraries
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
-import { includeToken, fixApiError, api } from "../../../../lib/system/api";
+import { includeToken, fixApiErr, api } from "../../../../lib/system/api";
 import { TOKO_URL } from "../../../../lib/constants/server.constant";
 
 export async function getAllToko(): Promise<TokoInterface[]> {
@@ -28,7 +28,9 @@ export async function getAllToko(): Promise<TokoInterface[]> {
   return getWhereToko(args);
 }
 
-export async function getWhereToko(args: string): Promise<TokoInterface[]> {
+export async function getWhereToko(
+  args: string,
+): Promise<TokoInterface[] | any> {
   let toko: TokoInterface[] = [];
   try {
     const req: AxiosResponse = await api.get(TOKO_URL + args, includeToken());
@@ -36,7 +38,7 @@ export async function getWhereToko(args: string): Promise<TokoInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getWhereToko, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -45,7 +47,7 @@ export async function getWhereToko(args: string): Promise<TokoInterface[]> {
   return toko;
 }
 
-export async function getOneToko(args: string): Promise<TokoInterface | null> {
+export async function getOneToko(args: string): Promise<TokoInterface | any> {
   let toko: TokoInterface | null = null;
   try {
     const req: AxiosResponse = await api.get(TOKO_URL + args, includeToken());
@@ -53,7 +55,7 @@ export async function getOneToko(args: string): Promise<TokoInterface | null> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getOneToko, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -62,7 +64,7 @@ export async function getOneToko(args: string): Promise<TokoInterface | null> {
   return toko;
 }
 
-export async function insertToko(data: any): Promise<TokoInterface | null> {
+export async function insertToko(data: any): Promise<TokoInterface | any> {
   let toko: TokoInterface | null = null;
   try {
     const req: AxiosResponse = await api.post(TOKO_URL, data, includeToken());
@@ -70,7 +72,7 @@ export async function insertToko(data: any): Promise<TokoInterface | null> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, insertToko, data);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;

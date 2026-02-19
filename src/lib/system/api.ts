@@ -28,7 +28,11 @@ export function includeToken(): AxiosRequestConfig {
 }
 
 // Api Error Handler
-export async function fixApiError(err: any): Promise<void> {
+export async function fixApiErr(
+  err: any,
+  cb: Function,
+  ...args: any[]
+): Promise<void> {
   const axiosErr = err as AxiosError;
   const { message }: any = axiosErr.response?.data;
 
@@ -52,6 +56,10 @@ export async function fixApiError(err: any): Promise<void> {
       try {
         // Refresh token
         await refreshToken(token);
+
+        // Return back to the caller (callback)
+        return cb(...args);
+
         /*
         |
         */
@@ -68,4 +76,7 @@ export async function fixApiError(err: any): Promise<void> {
   }
 
   /* Another method of error handler */
+
+  /* Unhandled error | Give it back to the caller */
+  throw err;
 }

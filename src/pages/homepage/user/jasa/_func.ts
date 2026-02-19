@@ -10,7 +10,7 @@
 
 // Libraries
 import { JasaInterface } from "../../../../lib/interfaces/database.interface";
-import { api, fixApiError, includeToken } from "../../../../lib/system/api";
+import { api, fixApiErr, includeToken } from "../../../../lib/system/api";
 import { JASA_URL } from "../../../../lib/constants/server.constant";
 import { AxiosResponse } from "axios";
 
@@ -18,7 +18,9 @@ export async function getAllJasa(): Promise<JasaInterface[]> {
   return getWhereJasa("");
 }
 
-export async function getWhereJasa(args: string): Promise<JasaInterface[]> {
+export async function getWhereJasa(
+  args: string,
+): Promise<JasaInterface[] | any> {
   let jasa: JasaInterface[] = [];
   try {
     const req: AxiosResponse = await api.get(JASA_URL + args, includeToken());
@@ -26,7 +28,7 @@ export async function getWhereJasa(args: string): Promise<JasaInterface[]> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getWhereJasa, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
@@ -35,7 +37,7 @@ export async function getWhereJasa(args: string): Promise<JasaInterface[]> {
   return jasa;
 }
 
-export async function getOneJasa(args: string): Promise<JasaInterface | null> {
+export async function getOneJasa(args: string): Promise<JasaInterface | any> {
   let jasa: JasaInterface | null = null;
   try {
     const req: AxiosResponse = await api.get(JASA_URL + args, includeToken());
@@ -43,7 +45,7 @@ export async function getOneJasa(args: string): Promise<JasaInterface | null> {
   } catch (err) {
     // Trying to handle error
     try {
-      await fixApiError(err);
+      return fixApiErr(err, getOneJasa, args);
     } catch (unhandledErr) {
       // Failed to handle error
       throw unhandledErr;
