@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 5-Feb-2026
-|  Updated At: 18-Feb-2026
+|  Updated At: 19-Feb-2026
 */
 
 // Node Modules
@@ -115,6 +115,21 @@ export function UserTokoInsertForm(): ReactNode {
     dispatch(closeUserTokoInsertForm());
   }
 
+  // First open
+  useEffect(() => {
+    // Get the nama input
+    const { nama } = getInputs();
+    // Wait until nama input is found
+    setTimeout(() => {
+      // Make sure nama uinput is founded
+      if (nama) {
+        // Set focus into it
+        nama.focus();
+      }
+    }, 1000);
+  }, []);
+
+  // Input focus | Alert listener
   useEffect(() => {
     // Will focus if:
     // - First load (opened form), set focus to nama input

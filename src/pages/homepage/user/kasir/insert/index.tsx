@@ -1,10 +1,20 @@
+/* ===========================================================
+|  INPUT DATA KASIR
+|  ===========================================================
+|  Jangan lupa untuk memperbarui dokumen ini
+|  jika ada perubahan atau penambahan fitur baru.
+|  -----------------------------------------------------------
+|  Created At: 19-Feb-2026
+|  Updated At: 19-Feb-2026
+*/
+
 // Style
 import "../../../../../styles/pages/homepage/user/kasir/user.kasir.insert.style.sass";
 
 // Node Modules
-import { ChangeEvent, ReactNode, useEffect } from "react";
 import { OrbitProgress } from "react-loading-indicators";
 import { useDispatch, useSelector } from "react-redux";
+import { ReactNode, useEffect } from "react";
 import $ from "jquery";
 
 // Libraries
@@ -13,6 +23,7 @@ import { getLoginCredentials } from "../../../../../lib/system/credentials";
 import { openAlert } from "../../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../../lib/redux/store.redux";
 import { errorSound } from "../../../../../lib/constants/media.constant";
+import { emptyInputCheck, readImage } from "../../../../../lib/dom";
 import {
   closeUserKasirInsertForm,
   addNewUserKasirListItem,
@@ -57,49 +68,6 @@ export function UserKasirInsertForm(): ReactNode {
     dispatch(setWaitUserKasirInsert(false));
   }
 
-  function emptyInputCheck(): any {
-    let result: any = {
-      status: true,
-      message: "",
-    };
-
-    const { nama, alamat, tlp, password } = getInputs();
-
-    // Tidak menulis nama
-    if (nama.val().length < 1) {
-      result.status = false;
-      result.message = "Mohon isi nama!";
-      // Stop this checking
-      return result;
-    }
-
-    // Tidak menulis alamat
-    if (alamat.val().length < 1) {
-      result.status = false;
-      result.message = "Mohon isi alamat!";
-      // Stop this checking
-      return result;
-    }
-
-    // Tidak menulis tlp
-    if (tlp.val().length < 1) {
-      result.status = false;
-      result.message = "Mohon isi No. Tlp!";
-      // Stop this checking
-      return result;
-    }
-
-    // Tidak menulis password
-    if (password.val().length < 1) {
-      result.status = false;
-      result.message = "Mohon isi Password!";
-      // Stop this checking
-      return result;
-    }
-
-    return result;
-  }
-
   async function save() {
     // If insert is already submit
     if (userKasirState.insert.wait) {
@@ -112,7 +80,7 @@ export function UserKasirInsertForm(): ReactNode {
     const { nama, alamat, tlp, password, tokoId, foto } = getInputs();
 
     // Empty data checking ...
-    const { status, message } = emptyInputCheck();
+    const { status, message } = emptyInputCheck("#User-Kasir-Insert-Form");
     // Any empty data is detected
     if (!status) {
       // Terminate task, and display the message
@@ -178,22 +146,25 @@ export function UserKasirInsertForm(): ReactNode {
     dispatch(closeUserKasirInsertForm());
   }
 
-  function updateImage(e: ChangeEvent<HTMLInputElement>): any {
-    const file = e.target.files;
-    if (file) {
-      const foto = $("#Foto-Preview");
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        foto.css("background-image", `url(${reader.result})`);
-      };
-      reader.readAsDataURL(file[0]);
-    }
-  }
+  // function updateImage(e: ChangeEvent<HTMLInputElement>): any {
+  //   readImage(e, (r: any) => {
+  //     const foto = $("#Foto-Preview");
+  //     foto.css("background-image", `url(${r})`);
+  //   });
+  // }
 
   // First open
   useEffect(() => {
+    // Get the nama input
     const { nama } = getInputs();
-    nama.focus();
+    // Wait until nama input is found
+    setTimeout(() => {
+      // Make sure nama uinput is founded
+      if (nama) {
+        // Set focus into it
+        nama.focus();
+      }
+    }, 1000);
   }, []);
 
   // Input focus | Alert listener
@@ -275,12 +246,23 @@ export function UserKasirInsertForm(): ReactNode {
         {/* Foto */}
         <div className="Form-Group Foto-Preview-Container">
           <label>Foto</label>
-          <input type="file" name="foto" onChange={(e) => updateImage(e)} />
+          <input
+            type="file"
+            name="foto"
+            onChange={(e) => {
+              readImage(e, (r: any) => {
+                const foto = $("#Foto-Preview");
+                foto.css("background-image", `url(${r})`);
+              });
+            }}
+          />
           <div
             id="Foto-Preview"
             onClick={() => {
               // Empty data checking ...
-              const { status, message } = emptyInputCheck();
+              const { status, message } = emptyInputCheck(
+                "#User-Kasir-Insert-Form",
+              );
               // Any empty data is detected
               if (!status) {
                 // Terminate task, and display the message
