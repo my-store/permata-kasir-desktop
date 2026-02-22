@@ -15,3 +15,12 @@ export function capitalizeEachWord(sentence: string): string {
 export function capitalizeFirstChar(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function extractTimestamp(time: string): string {
+  const d = new Date(time);
+  const tanggal = d.getDate();
+  const hari = d.toLocaleDateString("id-ID", { weekday: "long" });
+  const bulan = d.toLocaleDateString("id-ID", { month: "long" });
+  const tahun = d.getFullYear();
+  return `${hari}, ${tanggal} ${bulan} ${tahun}`;
+}

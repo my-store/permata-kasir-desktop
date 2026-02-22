@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 19-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Style
@@ -23,7 +23,11 @@ import { getLoginCredentials } from "../../../../../lib/system/credentials";
 import { openAlert } from "../../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../../lib/redux/store.redux";
 import { errorSound } from "../../../../../lib/constants/media.constant";
-import { emptyInputCheck, getInputs, readImage } from "../../../../../lib/dom";
+import {
+  emptyInputCheck,
+  getFormFields,
+  readImage,
+} from "../../../../../lib/dom";
 import {
   closeUserKasirInsertForm,
   addNewUserKasirListItem,
@@ -70,7 +74,7 @@ export function UserKasirInsertForm(): ReactNode {
       return failed(message);
     }
 
-    const { nama, alamat, tlp, password, tokoId, foto } = getInputs(
+    const { nama, alamat, tlp, password, tokoId, foto } = getFormFields(
       "#User-Kasir-Insert-Form",
     );
 
@@ -106,23 +110,14 @@ export function UserKasirInsertForm(): ReactNode {
       closeForm();
     } catch (err: any) {
       let msg: string = "";
-
-      // User Rank error
-      // Free user error code = 401
-      // Paid user hit maximum error code = 200
-      const { errMsg, errCode } = err;
-      if (errMsg && errCode) {
-        msg = errMsg;
-      }
-
-      // Empty field or other error
-      const { message } = err;
-      if (message) {
+      // Known error
+      try {
+        const { message } = err.response.data;
         msg = message;
+      } catch {
+        // Unknown error
+        msg = JSON.stringify(err);
       }
-
-      // console.log(err);
-
       return failed(msg);
     }
   }
@@ -132,13 +127,14 @@ export function UserKasirInsertForm(): ReactNode {
     dispatch(setWaitUserKasirInsert(false));
 
     // Remove form
+    // No need to reset the form, because its component is removed when open-state is off
     dispatch(closeUserKasirInsertForm());
   }
 
   // First open
   useEffect(() => {
     // Get the nama input
-    const { nama } = getInputs("#User-Kasir-Insert-Form");
+    const { nama } = getFormFields("#User-Kasir-Insert-Form");
     // Wait until nama input is found
     setTimeout(() => {
       // Make sure nama uinput is founded
@@ -152,7 +148,7 @@ export function UserKasirInsertForm(): ReactNode {
   // Input focus | Alert listener
   useEffect(() => {
     if (!alertState.opened) {
-      const { nama, alamat, tlp, password } = getInputs(
+      const { nama, alamat, tlp, password } = getFormFields(
         "#User-Kasir-Insert-Form",
       );
       switch (true) {

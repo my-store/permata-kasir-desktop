@@ -9,7 +9,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Feb-2026
-|  Updated At: 19-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 import { JqueryDomPropertySelectorInterface } from "./interfaces/dom.interface";
@@ -94,7 +94,7 @@ export function getInputs(parent: string): any {
 
   // Try to find/ detect all input inside the parent
   const inputs: JQuery<HTMLInputElement[] | any> = $(`${parent} input`);
-
+  // Iterate inputs
   for (let i of inputs) {
     // Get the input name
     const inputName: string = $(i).prop("name");
@@ -106,4 +106,27 @@ export function getInputs(parent: string): any {
   }
 
   return inputFound;
+}
+
+export function getSelects(parent: string) {
+  // Detected select default value
+  let selectFound: any = {};
+
+  // Try to find/ detect all select inside the parent
+  const selects: JQuery<HTMLSelectElement[] | any> = $(`${parent} select`);
+  // Iterate selects
+  for (let s of selects) {
+    // Get the select name
+    const selectName: string = $(s).prop("name");
+    // Set select key name with its select object
+    selectFound[selectName] = $(s);
+  }
+
+  return selectFound;
+}
+
+export function getFormFields(parent: string) {
+  const inputs = getInputs(parent);
+  const selects = getSelects(parent);
+  return { ...inputs, ...selects };
 }

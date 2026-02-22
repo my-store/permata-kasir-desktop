@@ -14,11 +14,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { UserKasirInsertForm } from "./insert";
 import { FiPlus } from "react-icons/fi";
+import { Tooltip } from "react-tooltip";
 
 // Libraries
 import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../lib/redux/store.redux";
 import { errorSound } from "../../../../lib/constants/media.constant";
+import { extractTimestamp } from "../../../../lib/system/string";
 import {
   setTokoListUserKasirInsert,
   openUserKasirInsertForm,
@@ -57,6 +59,29 @@ function ItemHeader(): ReactNode {
   );
 }
 
+function ItemTooltip(data: KasirInterface): ReactNode {
+  const createdAt: string = extractTimestamp(data.createdAt || "");
+  const updatedAt: string = extractTimestamp(data.updatedAt || "");
+
+  return (
+    <Tooltip id={data.nama} place="bottom-start" className="Tooltip">
+      {/* Created | Registered At */}
+      <div className="Tootip-Item">
+        <p className="Key">Terdaftar</p>
+        <p className="Val">: {createdAt}</p>
+      </div>
+
+      {/* Updated At | Only show if trully updated */}
+      {createdAt != updatedAt && (
+        <div className="Tootip-Item">
+          <p className="Key">Terakhir Diubah</p>
+          <p className="Val">: {updatedAt}</p>
+        </div>
+      )}
+    </Tooltip>
+  );
+}
+
 function Item({ dataKasir }: any): ReactNode {
   let containerStyle: CSSProperties = {};
 
@@ -73,8 +98,11 @@ function Item({ dataKasir }: any): ReactNode {
       {/* Data */}
       {dataKasir.map((d: KasirInterface, dx: number) => (
         <div key={dx} className="Item">
-          <p className="Nama">{d.nama}</p>
-          <p className="Alamat">{d.createdAt}</p>
+          <p data-tooltip-id={d.nama} className="Nama">
+            {d.nama}
+          </p>
+          {ItemTooltip(d)}
+          <p className="Alamat">{d.alamat}</p>
           <p className="Tlp">{d.tlp}</p>
         </div>
       ))}

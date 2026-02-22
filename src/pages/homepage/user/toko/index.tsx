@@ -17,8 +17,10 @@ import { Tooltip } from "react-tooltip";
 
 // Libraries
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
+import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../lib/redux/store.redux";
 import { errorSound } from "../../../../lib/constants/media.constant";
+import { extractTimestamp } from "../../../../lib/system/string";
 import {
   openUserTokoInsertForm,
   setUserTokoList,
@@ -31,11 +33,10 @@ import { ContentLoading } from "../../../../templates/loading";
 import "../../../../styles/pages/homepage/user/toko/user.toko.main.style.sass";
 
 // Functions
-import { extractTimestamp, getAllToko } from "./_func";
+import { getAllToko } from "./_func";
 
 // Forms
 import { UserTokoInsertForm } from "./insert";
-import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
 
 interface PageInterface {
   data: TokoInterface[];
