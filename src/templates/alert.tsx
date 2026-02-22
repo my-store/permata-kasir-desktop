@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 30-Jan-2026
+|  Updated At: 22-Feb-2026
 */
 
 import { removeAlert } from "../lib/redux/reducers/alert.reducer";
@@ -18,14 +18,11 @@ import "../styles/templates/alert.style.sass";
 export default function Alert() {
   const alertState = useSelector((state: ReduxRootStateType) => state.alert);
   const dispatch = useDispatch();
-
   const { opened, type, title, body } = alertState;
 
   // Dynamic classes
   const containerClass = opened ? "Alert Alert-Active" : "Alert";
-  const boxClass = opened
-    ? `Alert-Box Alert-Box-Active ${type}`
-    : `Alert-Box ${type}`;
+  const boxClass = opened ? `Alert-Box ${type}` : `Alert-Box ${type}`;
 
   return (
     <div className={containerClass}>

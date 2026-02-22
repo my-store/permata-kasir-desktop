@@ -1,5 +1,5 @@
 @use "../root-mixin" as *
-// @use "../root-vars" as *
+@use "../root-function" as *
 
 $error-title-color: rgb(233, 100, 100)
 $warning-title-color: rgb(233, 224, 100)
@@ -16,7 +16,8 @@ $success-body-background: rgb(167, 238, 171)
   left: 0px
   top: 0px
   z-index: 10
-  background-color: rgba($color: #000000, $alpha: 0.7)
+  background: semi-transparent(#000, 0.2)
+  backdrop-filter: blur(0px)
 
   display: flex
   align-items: center
@@ -24,18 +25,18 @@ $success-body-background: rgb(167, 238, 171)
 
   visibility: hidden
   opacity: 0
+  padding-top: 100vh
+
+  animation-name: Alert-Anim
+  animation-duration: 0.3s
 
   .Alert-Box
+    @include shadow
+
     width: 35vw
     background-color: white
     border-radius: 0.3rem
     overflow: hidden
-
-    position: relative
-    transform: translateY(100px)
-
-    animation-iteration-count: inherit
-    animation-duration: 0.2s
 
     &:is(.Error)
       background-color: $error-body-background
@@ -82,16 +83,20 @@ $success-body-background: rgb(167, 238, 171)
         &:not(:nth-child(1))
           margin-left: 5px
 
-  .Alert-Box-Active
-    animation-name: Alert-Box-Anim
-    transform: translateY(0px)
-
-  @keyframes Alert-Box-Anim
-    from
-      transform: translateY(100px)
-    to
-      transform: translateY(0px)
-
 .Alert-Active
   visibility: visible
   opacity: 1
+  backdrop-filter: blur(10px)
+  padding-top: 0vh
+
+@keyframes Alert-Anim
+  from
+    opacity: 0
+    visibility: hidden
+    backdrop-filter: blur(0px)
+    padding-top: 100vh
+  to
+    opacity: 1
+    visibility: visible
+    backdrop-filter: blur(10px)
+    padding-top: 0vh
