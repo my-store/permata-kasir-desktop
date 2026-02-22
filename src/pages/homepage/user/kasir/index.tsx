@@ -42,6 +42,7 @@ import { getAllToko } from "../toko/_func";
 
 // Style
 import "../../../../styles/pages/homepage/user/kasir/user.kasir.main.style.sass";
+import { SERVER_URL } from "../../../../lib/constants/server.constant";
 
 interface PageInterface {
   dataKasir: KasirInterface[];
@@ -54,6 +55,7 @@ function ItemHeader(): ReactNode {
     <div id="Item-Header">
       <p id="Nama">Nama</p>
       <p id="Alamat">Alamat</p>
+      <p id="Online">Online</p>
       <p id="Tlp">No. Tlp</p>
     </div>
   );
@@ -65,6 +67,18 @@ function ItemTooltip(data: KasirInterface): ReactNode {
 
   return (
     <Tooltip id={data.nama} place="bottom-start" className="Tooltip">
+      {/* Image */}
+      <div
+        className="Tooltip-Image"
+        style={{ backgroundImage: `url(${SERVER_URL}/static/${data.foto})` }}
+      ></div>
+
+      {/* Status Aktif */}
+      <div className="Tootip-Item">
+        <p className="Key">Aktif</p>
+        <p className="Val">: {data.active ? "Ya" : "Tidak"}</p>
+      </div>
+
       {/* Created | Registered At */}
       <div className="Tootip-Item">
         <p className="Key">Terdaftar</p>
@@ -103,6 +117,9 @@ function Item({ dataKasir }: any): ReactNode {
           </p>
           {ItemTooltip(d)}
           <p className="Alamat">{d.alamat}</p>
+          <p className="Online">
+            <span className={d.online ? "Yes" : "No"}></span>
+          </p>
           <p className="Tlp">{d.tlp}</p>
         </div>
       ))}

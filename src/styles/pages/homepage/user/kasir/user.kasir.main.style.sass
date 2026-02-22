@@ -19,6 +19,10 @@
                 @include padx(0.15rem)
                 width: 50vw
 
+            #Online
+                text-align: center
+                width: 10vw
+
             #Tlp
                 @include padx(0.15rem)
                 width: 20vw
@@ -43,14 +47,21 @@
                 font-size: 0.9rem
 
                 &:hover
-                    color: $primary-color
+                    background-color: $secondary-color
 
                 .Tooltip
+                    .Tooltip-Image
+                        width: 5vw
+                        height: 5vw
+                        background-repeat: no-repeat
+                        background-position: center
+                        background-size: cover
+
                     .Tootip-Item
                         @include flex-center()
 
                         .Key
-                            width: 13vw
+                            width: 7vw
 
                 .Nama
                     width: 100%
@@ -59,6 +70,22 @@
                 .Alamat
                     @include padx(0.15rem)
                     width: 50vw
+
+                .Online
+                    @include flex-just-center
+                    width: 10vw
+
+                    span
+                        width: 0.9vw
+                        height: 0.9vw
+                        border-radius: 2vw
+                        display: block
+
+                        &:is(.Yes)
+                            background-color: #53eead
+
+                        &:is(.No)
+                            background-color: #ee5368
 
                 .Tlp
                     @include padx(0.15rem)

@@ -40,6 +40,10 @@ export interface KasirInterface {
   tlp?: string;
   password?: string;
   foto?: string;
+  active?: boolean;
+  deactivatedAt?: string;
+  online?: boolean;
+  lastOnline?: string;
   tokoId?: number;
   userId?: number;
   createdAt?: string;
