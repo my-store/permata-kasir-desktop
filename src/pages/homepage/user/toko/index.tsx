@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 28-Jan-2026
-|  Updated At: 19-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Node Modules
@@ -13,6 +13,7 @@ import { CSSProperties, ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { FiPlus } from "react-icons/fi";
+import { Tooltip } from "react-tooltip";
 
 // Libraries
 import { TokoInterface } from "../../../../lib/interfaces/database.interface";
@@ -30,7 +31,7 @@ import { ContentLoading } from "../../../../templates/loading";
 import "../../../../styles/pages/homepage/user/toko/user.toko.main.style.sass";
 
 // Functions
-import { getAllToko } from "./_func";
+import { extractTimestamp, getAllToko } from "./_func";
 
 // Forms
 import { UserTokoInsertForm } from "./insert";
@@ -47,8 +48,72 @@ function ItemHeader(): ReactNode {
       <p id="Nama">Nama</p>
       <p id="Alamat">Alamat</p>
       <p id="Tlp">No. Tlp</p>
-      <p id="Jumlah-Kasir">Jumlah Kasir</p>
     </div>
+  );
+}
+
+function ItemTooltip(data: TokoInterface): ReactNode {
+  const jmlPrd: any = data._count?.produk;
+  const jmlJasa: any = data._count?.jasa;
+  const jmlKasir: any = data._count?.kasir;
+  const jmlTrsPmb: any = data._count?.transaksiPembelian;
+  const jmlTrsPnj: any = data._count?.transaksiPenjualan;
+  const jmlMnt: any = data._count?.monitorToko;
+  const createdAt: string = extractTimestamp(data.createdAt || "");
+  const updatedAt: string = extractTimestamp(data.updatedAt || "");
+
+  return (
+    <Tooltip id={data.nama} place="bottom-start" className="Tooltip">
+      {/* Jumlah Produk */}
+      <div className="Tootip-Item">
+        <p className="Key">Jml. Produk</p>
+        <p className="Val">: {jmlPrd > 0 ? jmlPrd : "-"}</p>
+      </div>
+
+      {/* Jumlah Jasa */}
+      <div className="Tootip-Item">
+        <p className="Key">Jml. Jasa</p>
+        <p className="Val">: {jmlJasa > 0 ? jmlJasa : "-"}</p>
+      </div>
+
+      {/* Jumlah Kasir */}
+      <div className="Tootip-Item">
+        <p className="Key">Jml. Kasir</p>
+        <p className="Val">: {jmlKasir > 0 ? jmlKasir : "-"}</p>
+      </div>
+
+      {/* Jumlah Transaksi Penjualan */}
+      <div className="Tootip-Item">
+        <p className="Key">Jml. Trs. Penjualan</p>
+        <p className="Val">: {jmlTrsPnj > 0 ? jmlTrsPnj : "-"}</p>
+      </div>
+
+      {/* Jumlah Transaksi Pembelian */}
+      <div className="Tootip-Item">
+        <p className="Key">Jml. Trs. Pembelian</p>
+        <p className="Val">: {jmlTrsPmb > 0 ? jmlTrsPmb : "-"}</p>
+      </div>
+
+      {/* Jumlah Akun Monitor */}
+      <div className="Tootip-Item">
+        <p className="Key">Jml. Akun Monitor</p>
+        <p className="Val">: {jmlMnt > 0 ? jmlMnt : "-"}</p>
+      </div>
+
+      {/* Created | Registered At */}
+      <div className="Tootip-Item">
+        <p className="Key">Terdaftar</p>
+        <p className="Val">: {createdAt}</p>
+      </div>
+
+      {/* Updated At | Only show if trully updated */}
+      {createdAt != updatedAt && (
+        <div className="Tootip-Item">
+          <p className="Key">Terakhir Diubah</p>
+          <p className="Val">: {updatedAt}</p>
+        </div>
+      )}
+    </Tooltip>
   );
 }
 
@@ -63,17 +128,16 @@ function Item({ data }: any): ReactNode {
   return (
     <div id="Item-Container" style={containerStyle}>
       {data.length < 1 && <p id="Empty-Message">Belum ada toko</p>}
-      {data.map((d: TokoInterface, dx: number) => {
-        const jumlahKasir: any = d.kasir?.length;
-        return (
-          <div key={dx} className="Item">
-            <p className="Nama">{d.nama}</p>
-            <p className="Alamat">{d.alamat}</p>
-            <p className="Tlp">{d.tlp}</p>
-            <p className="Jumlah-Kasir">{jumlahKasir}</p>
-          </div>
-        );
-      })}
+      {data.map((d: TokoInterface, dx: number) => (
+        <div key={dx} className="Item">
+          <p data-tooltip-id={d.nama} className="Nama">
+            {dx + 1}. {d.nama}
+          </p>
+          {ItemTooltip(d)}
+          <p className="Alamat">{d.alamat}</p>
+          <p className="Tlp">{d.tlp}</p>
+        </div>
+      ))}
     </div>
   );
 }

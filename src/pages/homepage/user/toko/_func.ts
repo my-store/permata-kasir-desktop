@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 30-Jan-2026
-|  Updated At: 19-Feb-2026
+|  Updated At: 20-Feb-2026
 */
 
 // Node Modules
@@ -17,15 +17,7 @@ import { includeToken, fixApiErr, api } from "../../../../lib/system/api";
 import { TOKO_URL } from "../../../../lib/constants/server.constant";
 
 export async function getAllToko(): Promise<TokoInterface[]> {
-  const select: any = {
-    kasir: {
-      select: {
-        nama: true,
-      },
-    },
-  };
-  const args: string = `?select=${JSON.stringify(select)}`;
-  return getWhereToko(args);
+  return getWhereToko("");
 }
 
 export async function getWhereToko(
@@ -79,4 +71,13 @@ export async function insertToko(data: any): Promise<TokoInterface | any> {
     }
   }
   return toko;
+}
+
+export function extractTimestamp(time: string): string {
+  const d = new Date(time);
+  const tanggal = d.getDate();
+  const hari = d.toLocaleDateString("id-ID", { weekday: "long" });
+  const bulan = d.toLocaleDateString("id-ID", { month: "long" });
+  const tahun = d.getFullYear();
+  return `${hari}, ${tanggal} ${bulan} ${tahun}`;
 }

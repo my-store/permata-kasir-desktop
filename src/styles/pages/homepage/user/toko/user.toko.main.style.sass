@@ -22,10 +22,6 @@
             #Tlp
                 @include padx(0.15rem)
                 width: 20vw
-
-            #Jumlah-Kasir
-                @include padx(0.15rem)
-                width: 22vw
                 text-align: right
 
         #Item-Container
@@ -46,8 +42,19 @@
                 font-weight: 300
                 font-size: 0.9rem
 
+                &:hover
+                    color: $primary-color
+
+                .Tooltip
+                    .Tootip-Item
+                        @include flex-center()
+
+                        .Key
+                            width: 13vw
+
                 .Nama
                     width: 100%
+                    user-select: none
 
                 .Alamat
                     @include padx(0.15rem)
@@ -56,10 +63,6 @@
                 .Tlp
                     @include padx(0.15rem)
                     width: 20vw
-
-                .Jumlah-Kasir
-                    @include padx(0.15rem)
-                    width: 22vw
                     text-align: right
 
         .Add-New-Btn
