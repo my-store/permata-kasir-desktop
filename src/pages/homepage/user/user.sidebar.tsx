@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 2-Feb-2026
-|  Updated At: 9-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Node Modules
@@ -44,11 +44,18 @@ import { socket } from "../../../main";
 import { MdDiscount } from "react-icons/md";
 import { SERVER_URL } from "../../../lib/constants/server.constant";
 import { openUserSettings } from "../../../lib/redux/reducers/user/settings.reducer";
+import {
+  openConfirm,
+  removeConfirm,
+} from "../../../lib/redux/reducers/confirm.reducer";
 
 // Entry Point
 export function UserSidebar(): ReactNode {
   const loginDataState = useSelector(
     (state: ReduxRootStateType) => state.user_login_data,
+  );
+  const confirmState = useSelector(
+    (state: ReduxRootStateType) => state.confirm,
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -71,6 +78,23 @@ export function UserSidebar(): ReactNode {
   useEffect(() => {
     load();
   }, []);
+
+  // Detect confirm callback, this will triggered by yes button inside confirm box
+  useEffect(() => {
+    // Make sure the callback status is true
+    if (confirmState.callback) {
+      // Make sure the confirm-box is opened
+      if (confirmState.opened) {
+        // Make sure the id is sidebar.logout
+        if (confirmState.callbackId == "sidebar.logout") {
+          // Remove confirm box
+          dispatch(removeConfirm());
+          // Sign-out and remove login data
+          signOut();
+        }
+      }
+    }
+  }, [confirmState.callback]);
 
   return (
     <section id="Sidebar">
@@ -156,7 +180,19 @@ export function UserSidebar(): ReactNode {
         </div>
         <div className="Btn-Container">
           <ImExit size={"1.1rem"} color="#eee" />
-          <button onClick={signOut}>Keluar</button>
+          <button
+            onClick={() => {
+              dispatch(
+                openConfirm({
+                  callbackId: "sidebar.logout",
+                  title: "Keluar",
+                  body: "Apakakh anda yakin ingin keluar?",
+                }),
+              );
+            }}
+          >
+            Keluar
+          </button>
         </div>
       </div>
     </section>

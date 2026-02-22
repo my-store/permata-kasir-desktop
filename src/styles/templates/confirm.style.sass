@@ -1,0 +1,79 @@
+@use "../root-mixin" as *
+@use "../root-vars" as *
+@use "../root-function" as *
+
+.Confirm
+    width: 100%
+    height: 100vh
+    position: fixed
+    left: 0px
+    top: 0px
+    z-index: 10
+    background: semi-transparent(#000, 0.2)
+    backdrop-filter: blur(0px)
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+    visibility: hidden
+    opacity: 0
+    padding-top: 100vh
+
+    animation-name: Confirm-Anim
+    animation-duration: 0.3s
+
+    .Confirm-Box
+        @include shadow
+
+        width: 35vw
+        background-color: white
+        border-radius: 0.3rem
+        overflow: hidden
+
+        .Confirm-Title
+            text-align: center
+            font-size: 16px
+            line-height: 16px
+            padding: 0.5rem 0 0.5rem 0
+            background-color: $primary-color
+            color: #eee
+
+        .Confirm-Body
+            width: 100%
+            font-size: 14px
+            line-height: 16px
+            height: 15vh
+            padding: 0.3rem 0.5rem 0.3rem 0.5rem
+
+        .Confirm-Button-Container
+            width: 100%
+            display: flex
+            justify-content: flex-end
+            padding: 0 0.7rem 0.5rem 0
+
+        button
+            @include rm-def-btn-styles
+            font-size: 14px
+            cursor: pointer
+
+            &:not(:nth-child(1))
+                margin-left: 5px
+
+.Confirm-Active
+    visibility: visible
+    opacity: 1
+    backdrop-filter: blur(10px)
+    padding-top: 0vh
+
+@keyframes Confirm-Anim
+    from
+        opacity: 0
+        visibility: hidden
+        backdrop-filter: blur(0px)
+        padding-top: 100vh
+    to
+        opacity: 1
+        visibility: visible
+        backdrop-filter: blur(10px)
+        padding-top: 0vh

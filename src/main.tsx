@@ -12,7 +12,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 7-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Pages
@@ -48,6 +48,7 @@ import "./styles/app.style.sass";
 // Templates
 import { PageLoading } from "./templates/loading";
 import Alert from "./templates/alert";
+import Confirm from "./templates/confirm";
 
 export let socket: Socket;
 
@@ -75,6 +76,9 @@ function ProtectedRoutes({ role }: RootProtectedLayoutInterface) {
 function App(): ReactNode {
   const rootState = useSelector((state: ReduxRootStateType) => state.root);
   const alertState = useSelector((state: ReduxRootStateType) => state.alert);
+  const confirmState = useSelector(
+    (state: ReduxRootStateType) => state.confirm,
+  );
 
   function socketConnect(callback: Function) {
     socket = io(SERVER_URL);
@@ -111,6 +115,9 @@ function App(): ReactNode {
 
         {/* Alert box */}
         {alertState.opened && <Alert />}
+
+        {/* Confirm box */}
+        {confirmState.opened && <Confirm />}
 
         <Routes>
           {/* Login | Default landing page logic */}

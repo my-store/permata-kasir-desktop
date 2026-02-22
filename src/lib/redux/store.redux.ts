@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 9-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Reducers
@@ -19,6 +19,7 @@ import UserMemberReducer from "./reducers/user/member.reducer";
 import UserKasirReducer from "./reducers/user/kasir.reducer";
 import UserJasaReducer from "./reducers/user/jasa.reducer";
 import UserTokoReducer from "./reducers/user/toko.reducer";
+import ConfirmReducer from "./reducers/confirm.reducer";
 import AlertReducer from "./reducers/alert.reducer";
 import LoginReducer from "./reducers/login.reducer";
 import RootReducer from "./reducers/root.reducer";
@@ -32,6 +33,7 @@ export const store = configureStore({
     root: RootReducer,
     login: LoginReducer,
     alert: AlertReducer,
+    confirm: ConfirmReducer,
 
     // User states
     user_login_data: UserLoginDataReducer,
