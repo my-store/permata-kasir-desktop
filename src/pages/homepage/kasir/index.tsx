@@ -5,15 +5,17 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 2-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Libraries
 import { APP_PAGE_LOADING_DELAY } from "../../../lib/constants/app.constant";
+import { rootRemoveLoading } from "../../../lib/redux/reducers/root.reducer";
+import { ReduxRootStateType } from "../../../lib/redux/store.redux";
 
 // Node Modules
-import { rootRemoveLoading } from "../../../lib/redux/reducers/root.reducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import $ from "jquery";
 
@@ -34,6 +36,7 @@ import { Aboutpage } from "../../aboutpage";
 import MesinKasir from "./mesin";
 
 function KasirGlobalTemplates({ children, socketConnect }: any) {
+  const loginState = useSelector((state: ReduxRootStateType) => state.login);
   const dispatch = useDispatch();
 
   function socketListener() {}
@@ -65,6 +68,10 @@ function KasirGlobalTemplates({ children, socketConnect }: any) {
       }
     };
   }, []);
+
+  if (!loginState.isLogin) {
+    return <Navigate to={"/"} replace />;
+  }
 
   return <div id="Kasir">{children}</div>;
 }

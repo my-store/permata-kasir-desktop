@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 19-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Node Modules
@@ -47,6 +47,16 @@ interface PageInterface {
   isPending: boolean;
 }
 
+function ItemHeader(): ReactNode {
+  return (
+    <div id="Item-Header">
+      <p id="Nama">Nama</p>
+      <p id="Alamat">Alamat</p>
+      <p id="Tlp">No. Tlp</p>
+    </div>
+  );
+}
+
 function Item({ dataKasir }: any): ReactNode {
   let containerStyle: CSSProperties = {};
 
@@ -56,13 +66,17 @@ function Item({ dataKasir }: any): ReactNode {
   }
 
   return (
-    <div id="Items-Container" style={containerStyle}>
+    <div id="Item-Container" style={containerStyle}>
       {/* Empty Data */}
       {dataKasir.length < 1 && <p id="Empty-Message">Belum ada kasir</p>}
 
       {/* Data */}
       {dataKasir.map((d: KasirInterface, dx: number) => (
-        <p key={dx}>{d.nama}</p>
+        <div key={dx} className="Item">
+          <p className="Nama">{d.nama}</p>
+          <p className="Alamat">{d.createdAt}</p>
+          <p className="Tlp">{d.tlp}</p>
+        </div>
       ))}
     </div>
   );
@@ -75,10 +89,18 @@ function Page({ dataKasir, dataToko, isPending }: PageInterface): ReactNode {
 
   return (
     <div id="User-Kasir">
+      {/* Loading */}
       {isPending && (
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
+
+      {/* Header */}
+      {ready && <ItemHeader />}
+
+      {/* Items */}
       {ready && <Item dataKasir={dataKasir} />}
+
+      {/* Add Button */}
       {ready && (
         <FiPlus
           className="Add-New-Btn"

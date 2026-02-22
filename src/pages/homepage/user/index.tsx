@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 9-Feb-2026
+|  Updated At: 22-Feb-2026
 */
 
 // Libraries
@@ -55,11 +55,13 @@ import { Bank } from "./bank";
 
 // User Settings
 import { UserSettings } from "./settings";
+import { Navigate } from "react-router-dom";
 
 function UserGlobalTemplates({ children, socketConnect }: any) {
   const settingsState = useSelector(
     (state: ReduxRootStateType) => state.user_settings,
   );
+  const loginState = useSelector((state: ReduxRootStateType) => state.login);
   const dispatch = useDispatch();
 
   // When the page is loaded or refreshed
@@ -90,6 +92,10 @@ function UserGlobalTemplates({ children, socketConnect }: any) {
       }
     };
   }, []);
+
+  if (!loginState.isLogin) {
+    return <Navigate to={"/"} replace />;
+  }
 
   return (
     <div id="User">

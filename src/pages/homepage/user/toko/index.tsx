@@ -127,7 +127,10 @@ function Item({ data }: any): ReactNode {
 
   return (
     <div id="Item-Container" style={containerStyle}>
+      {/* Empty Data */}
       {data.length < 1 && <p id="Empty-Message">Belum ada toko</p>}
+
+      {/* Data */}
       {data.map((d: TokoInterface, dx: number) => (
         <div key={dx} className="Item">
           <p data-tooltip-id={d.nama} className="Nama">
@@ -194,6 +197,7 @@ function Page({ data, isPending }: PageInterface): ReactNode {
       {isPending && (
         <ContentLoading style={{ width: "100%", height: "100vh" }} />
       )}
+
       {/* Header */}
       {ready && <ItemHeader />}
 
