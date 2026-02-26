@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 2-Feb-2026
-|  Updated At: 22-Feb-2026
+|  Updated At: 26-Feb-2026
 */
 
 // Node Modules
@@ -91,6 +91,8 @@ export function UserSidebar(): ReactNode {
           dispatch(removeConfirm());
           // Sign-out and remove login data
           signOut();
+          // Reload page | Menghindari jika halaman tetap tidak mau logout
+          window.location.reload();
         }
       }
     }
