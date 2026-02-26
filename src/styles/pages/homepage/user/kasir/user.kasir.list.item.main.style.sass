@@ -1,0 +1,45 @@
+@use "../../../../root-vars" as *
+@use "../../../../root-mixin" as *
+
+#User
+    #User-Kasir
+        #Item-Container
+            .Item
+                @include flex-center
+                padding: 0 0.05rem 0 0.15rem
+
+                // Set font style globally
+                font-weight: 300
+                font-size: 0.9rem
+
+                &:hover
+                    background-color: $secondary-color
+
+                .Nama
+                    width: 100%
+                    user-select: none
+
+                .Alamat
+                    @include padx(0.15rem)
+                    width: 50vw
+
+                .Online
+                    @include flex-just-center
+                    width: 10vw
+
+                    span
+                        width: 0.9vw
+                        height: 0.9vw
+                        border-radius: 2vw
+                        display: block
+
+                        &:is(.Yes)
+                            background-color: #53eead
+
+                        &:is(.No)
+                            background-color: #ee5368
+
+                .Tlp
+                    @include padx(0.15rem)
+                    width: 20vw
+                    text-align: right

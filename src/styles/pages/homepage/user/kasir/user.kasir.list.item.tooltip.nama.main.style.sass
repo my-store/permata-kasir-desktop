@@ -1,0 +1,20 @@
+@use "../../../../root-vars" as *
+@use "../../../../root-mixin" as *
+
+#User
+    #User-Kasir
+        #Item-Container
+            .Item
+                .Tooltip
+                    .Tooltip-Image
+                        width: 5vw
+                        height: 5vw
+                        background-repeat: no-repeat
+                        background-position: center
+                        background-size: cover
+
+                    .Tootip-Item
+                        @include flex-center()
+
+                        .Key
+                            width: 7vw

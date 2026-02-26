@@ -1,0 +1,29 @@
+@use "../../../../root-vars" as *
+@use "../../../../root-mixin" as *
+
+#User
+    #User-Kasir
+        #Item-Header
+            @include flex-center
+            padding: 0 $scrollbar-width 0 0.15rem
+            background-color: #e1e1e1
+
+            // Set font style globally
+            font-weight: 500
+            font-size: 0.9rem
+
+            #Nama
+                width: 100%
+
+            #Alamat
+                @include padx(0.15rem)
+                width: 50vw
+
+            #Online
+                text-align: center
+                width: 10vw
+
+            #Tlp
+                @include padx(0.15rem)
+                width: 20vw
+                text-align: right

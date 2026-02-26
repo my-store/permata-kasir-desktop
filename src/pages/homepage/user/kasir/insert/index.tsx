@@ -5,11 +5,11 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 22-Feb-2026
+|  Updated At: 26-Feb-2026
 */
 
 // Style
-import "../../../../../styles/pages/homepage/user/kasir/user.kasir.insert.style.sass";
+import "../../../../../styles/pages/homepage/user/kasir/user.kasir.insert.main.style.sass";
 
 // Node Modules
 import { OrbitProgress } from "react-loading-indicators";

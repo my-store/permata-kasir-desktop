@@ -5,34 +5,17 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 22-Feb-2026
+|  Updated At: 26-Feb-2026
 */
 
 // Node Modules
-import { CSSProperties, ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { UserKasirInsertForm } from "./insert";
-import { FiPlus } from "react-icons/fi";
-import { Tooltip } from "react-tooltip";
+import { ReactNode, useEffect } from "react";
 
 // Libraries
-import { openAlert } from "../../../../lib/redux/reducers/alert.reducer";
 import { ReduxRootStateType } from "../../../../lib/redux/store.redux";
-import { errorSound } from "../../../../lib/constants/media.constant";
-import { extractTimestamp } from "../../../../lib/system/string";
-import {
-  setTokoListUserKasirInsert,
-  openUserKasirInsertForm,
-  setUserKasirList,
-} from "../../../../lib/redux/reducers/user/kasir.reducer";
-import {
-  KasirInterface,
-  TokoInterface,
-} from "../../../../lib/interfaces/database.interface";
-
-// Templates
-import { ContentLoading } from "../../../../templates/loading";
+import { setUserKasirList } from "../../../../lib/redux/reducers/user/kasir.reducer";
 
 // Kasir Functions
 import { getAllKasir } from "./_func";
@@ -40,145 +23,8 @@ import { getAllKasir } from "./_func";
 // Toko Functions
 import { getAllToko } from "../toko/_func";
 
-// Style
-import "../../../../styles/pages/homepage/user/kasir/user.kasir.main.style.sass";
-import { SERVER_URL } from "../../../../lib/constants/server.constant";
-
-interface PageInterface {
-  dataKasir: KasirInterface[];
-  dataToko: TokoInterface[];
-  isPending: boolean;
-}
-
-function ItemHeader(): ReactNode {
-  return (
-    <div id="Item-Header">
-      <p id="Nama">Nama</p>
-      <p id="Alamat">Alamat</p>
-      <p id="Online">Online</p>
-      <p id="Tlp">No. Tlp</p>
-    </div>
-  );
-}
-
-function ItemTooltip(data: KasirInterface): ReactNode {
-  const createdAt: string = extractTimestamp(data.createdAt || "");
-  const updatedAt: string = extractTimestamp(data.updatedAt || "");
-
-  return (
-    <Tooltip id={data.nama} place="bottom-start" className="Tooltip">
-      {/* Image */}
-      <div
-        className="Tooltip-Image"
-        style={{ backgroundImage: `url(${SERVER_URL}/static/${data.foto})` }}
-      ></div>
-
-      {/* Status Aktif */}
-      <div className="Tootip-Item">
-        <p className="Key">Aktif</p>
-        <p className="Val">: {data.active ? "Ya" : "Tidak"}</p>
-      </div>
-
-      {/* Created | Registered At */}
-      <div className="Tootip-Item">
-        <p className="Key">Terdaftar</p>
-        <p className="Val">: {createdAt}</p>
-      </div>
-
-      {/* Updated At | Only show if trully updated */}
-      {createdAt != updatedAt && (
-        <div className="Tootip-Item">
-          <p className="Key">Terakhir Diubah</p>
-          <p className="Val">: {updatedAt}</p>
-        </div>
-      )}
-    </Tooltip>
-  );
-}
-
-function Item({ dataKasir }: any): ReactNode {
-  let containerStyle: CSSProperties = {};
-
-  // If dataKasir is grather than .., activate scrollbar
-  if (dataKasir.length > 0) {
-    containerStyle.overflowY = "scroll";
-  }
-
-  return (
-    <div id="Item-Container" style={containerStyle}>
-      {/* Empty Data */}
-      {dataKasir.length < 1 && <p id="Empty-Message">Belum ada kasir</p>}
-
-      {/* Data */}
-      {dataKasir.map((d: KasirInterface, dx: number) => (
-        <div key={dx} className="Item">
-          <p data-tooltip-id={d.nama} className="Nama">
-            {d.nama}
-          </p>
-          {ItemTooltip(d)}
-          <p className="Alamat">{d.alamat}</p>
-          <p className="Online">
-            <span className={d.online ? "Yes" : "No"}></span>
-          </p>
-          <p className="Tlp">{d.tlp}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Page({ dataKasir, dataToko, isPending }: PageInterface): ReactNode {
-  const state = useSelector((state: ReduxRootStateType) => state.user_kasir);
-  const dispatch = useDispatch();
-  const ready: boolean = !isPending;
-
-  return (
-    <div id="User-Kasir">
-      {/* Loading */}
-      {isPending && (
-        <ContentLoading style={{ width: "100%", height: "100vh" }} />
-      )}
-
-      {/* Header */}
-      {ready && <ItemHeader />}
-
-      {/* Items */}
-      {ready && <Item dataKasir={dataKasir} />}
-
-      {/* Add Button */}
-      {ready && (
-        <FiPlus
-          className="Add-New-Btn"
-          title="Buat kasir baru"
-          size={"1.5rem"}
-          onClick={() => {
-            // Batalkan buka form, jika user belum memiliki toko
-            if (dataToko.length < 1) {
-              // Play error sound
-              errorSound.play();
-
-              // Display warning message
-              return dispatch(
-                openAlert({
-                  type: "Warning",
-                  title: "Gagal Membuka Form",
-                  body: "Setidaknya anda memiliki satu toko, sebelum menambahkan kasir.",
-                }),
-              );
-            }
-
-            // Open insert form
-            dispatch(openUserKasirInsertForm());
-
-            // Set toko list to insert form
-            dispatch(setTokoListUserKasirInsert(dataToko));
-          }}
-        />
-      )}
-      {ready && state.insert.opened && <UserKasirInsertForm />}
-    </div>
-  );
-}
+// List and its Header, Item etc.
+import { UserKasirList } from "./list";
 
 // Entry Point
 export function Kasir(): ReactNode {
@@ -206,7 +52,7 @@ export function Kasir(): ReactNode {
     query.getAllKasir.isPending == true || query.getAllToko.isPending == true;
 
   return (
-    <Page
+    <UserKasirList
       dataKasir={list}
       dataToko={query.getAllToko.data ?? []}
       isPending={pending}
