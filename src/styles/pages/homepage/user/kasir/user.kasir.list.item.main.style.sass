@@ -13,7 +13,8 @@
                 font-size: 0.9rem
 
                 &:hover
-                    background-color: $secondary-color
+                    &:not(.Item-Selected)
+                        background-color: $secondary-color
 
                 .Nama
                     width: 100%
@@ -43,3 +44,6 @@
                     @include padx(0.15rem)
                     width: 20vw
                     text-align: right
+
+            .Item-Selected
+                background-color: #d7ff8d

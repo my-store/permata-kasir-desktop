@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 13-Feb-2026
+|  Updated At: 4-Mar-2026
 */
 
 // Node Modules
@@ -28,11 +28,13 @@ interface UserKasirInsertInterface {
 
 interface UserKasirInterface {
   list: KasirInterface[];
+  listSelected: KasirInterface[];
   insert: UserKasirInsertInterface;
 }
 
 const DefaultKasirState: UserKasirInterface = {
   list: [],
+  listSelected: [],
   insert: {
     opened: false,
     tokoList: [],
@@ -52,6 +54,22 @@ function AddNewListItemHandler(
   action: ReduxActionInterface,
 ) {
   state.list = [...state.list, action.payload];
+}
+
+function AddListItemSelectedHandler(
+  state: UserKasirInterface,
+  action: ReduxActionInterface,
+) {
+  state.listSelected = [...state.listSelected, action.payload];
+}
+
+function RemoveListItemSelectedHandler(
+  state: UserKasirInterface,
+  action: ReduxActionInterface,
+) {
+  state.listSelected = state.listSelected.filter(
+    (s) => s.id != action.payload.id,
+  );
 }
 
 function OpenInsertFormHandler(state: UserKasirInterface) {
@@ -83,6 +101,8 @@ const UserKasirReducer = createSlice({
     // List
     setUserKasirList: SetListHandler,
     addNewUserKasirListItem: AddNewListItemHandler,
+    addUserKasirListItemSelected: AddListItemSelectedHandler,
+    removeUserKasirListItemSelected: RemoveListItemSelectedHandler,
 
     // Insert Form
     openUserKasirInsertForm: OpenInsertFormHandler,
@@ -96,6 +116,8 @@ export const {
   // List
   setUserKasirList,
   addNewUserKasirListItem,
+  addUserKasirListItemSelected,
+  removeUserKasirListItemSelected,
 
   // Insert Form
   openUserKasirInsertForm,
