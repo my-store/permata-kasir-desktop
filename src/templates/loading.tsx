@@ -7,12 +7,12 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 30-Jan-2026
+|  Updated At: 9-Mar-2026
 */
 
 import { ReduxRootStateType } from "../lib/redux/store.redux";
 import { Mosaic, Atom } from "react-loading-indicators";
-import "../styles/templates/loading.style.sass";
+import "../styles/templates/loading.main.style.sass";
 import { useSelector } from "react-redux";
 import { CSSProperties } from "react";
 

@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 22-Feb-2026
+|  Updated At: 9-Mar-2026
 */
 
 import {
@@ -16,7 +16,7 @@ import {
 } from "../lib/redux/reducers/confirm.reducer";
 import { ReduxRootStateType } from "../lib/redux/store.redux";
 import { useDispatch, useSelector } from "react-redux";
-import "../styles/templates/confirm.style.sass";
+import "../styles/templates/confirm.main.style.sass";
 
 export default function Confirm() {
   const confirmState = useSelector(

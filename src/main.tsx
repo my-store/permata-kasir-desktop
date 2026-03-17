@@ -12,7 +12,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 19-Jan-2026
-|  Updated At: 22-Feb-2026
+|  Updated At: 17-Mar-2026
 */
 
 // Pages
@@ -30,9 +30,9 @@ import { Error } from "./lib/system/log";
 
 // Node Modules
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import React, { ReactNode, useEffect, useRef } from "react";
 import { Provider, useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
-import React, { ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import {
   BrowserRouter,
@@ -41,14 +41,15 @@ import {
   Outlet,
   Route,
 } from "react-router-dom";
+import $ from "jquery";
 
 // Main Style
 import "./styles/app.style.sass";
 
 // Templates
 import { PageLoading } from "./templates/loading";
-import Alert from "./templates/alert";
 import Confirm from "./templates/confirm";
+import Alert from "./templates/alert";
 
 export let socket: Socket;
 
@@ -79,6 +80,7 @@ function App(): ReactNode {
   const confirmState = useSelector(
     (state: ReduxRootStateType) => state.confirm,
   );
+  const rootRef: React.RefObject<any> = useRef(null);
 
   function socketConnect(callback: Function) {
     socket = io(SERVER_URL);
@@ -107,9 +109,34 @@ function App(): ReactNode {
     });
   }
 
+  // Global Configurations
+  useEffect(() => {
+    // Detect if root component is ready
+    if (rootRef.current) {
+      /*
+      | RIGHT CLICK | CONTEXT MENU
+      | Use jQuery to attach the 'contextmenu' event handler
+      */
+      $(rootRef.current).on("contextmenu", function (e) {
+        // Hide | Remove | Prevent the default browser context menu
+        e.preventDefault();
+      });
+
+      /*
+      | CLEANUP FUNCTION
+      | 1. To remove the event listener when the component unmounts
+      */
+      return function () {
+        if (rootRef.current) {
+          $(rootRef.current).off("contextmenu");
+        }
+      };
+    }
+  }, []);
+
   return (
     <BrowserRouter>
-      <div id="Page-Container">
+      <div id="Page-Container" ref={rootRef}>
         {/* Loading animation */}
         {rootState.isLoading && <PageLoading easing="ease-in-out" />}
 

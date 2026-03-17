@@ -5,13 +5,13 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 26-Feb-2026
-|  Updated At: 4-Mar-2026
+|  Updated At: 17-Mar-2026
 */
 
 // Node Modules
 import { CSSProperties, ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import $ from "jquery";
+import $ from "jquery";
 
 // Libraries
 import { KasirInterface } from "../../../../../../lib/interfaces/database.interface";
@@ -28,7 +28,7 @@ import { UserKasirListItemTooltipNama } from "./tooltip/nama";
 import "../../../../../../styles/pages/homepage/user/kasir/user.kasir.list.item.main.style.sass";
 import {
   removeConfirm,
-  // openConfirm,
+  openConfirm,
 } from "../../../../../../lib/redux/reducers/confirm.reducer";
 
 export function UserKasirListItem({ dataKasir }: any): ReactNode {
@@ -38,10 +38,13 @@ export function UserKasirListItem({ dataKasir }: any): ReactNode {
   );
   const dispatch = useDispatch();
 
-  function select(d: KasirInterface) {
-    const alreadySelected: any = state.listSelected.find((s) => s.id == d.id);
-    // Already selected
-    if (alreadySelected) {
+  function alreadySelected(d: KasirInterface): any {
+    return state.listSelected.find((s) => s.id == d.id);
+  }
+
+  function multipleSelection(d: KasirInterface) {
+    // This kasir is already selected
+    if (alreadySelected(d)) {
       // Terminate and un-select
       return dispatch(removeUserKasirListItemSelected(d));
     }
@@ -49,41 +52,57 @@ export function UserKasirListItem({ dataKasir }: any): ReactNode {
     dispatch(addUserKasirListItemSelected(d));
   }
 
+  function singleSelection(d: KasirInterface) {
+    // This kasir is already selected
+    if (alreadySelected(d)) {
+      // Terminate and un-select
+      return dispatch(removeUserKasirListItemSelected(d));
+    }
+
+    // Un-select all kasir first (if exists, no need to check the lenght, bc loop is handle that)
+    for (let ls of state.listSelected) {
+      dispatch(removeUserKasirListItemSelected(ls));
+    }
+
+    // Select kasir
+    dispatch(addUserKasirListItemSelected(d));
+  }
+
   // TO FIX THIS, CREATE A BOX THAT CONTAIN ACTION BUTTON LIKE:
   // UPDATE, DELETE ETC.
 
-  // function pressHandler({ key }: any) {
-  //   if (key == "Delete") {
-  //     /*
-  //     |
-  //     | MUST BE FIXED !!!
-  //     |
-  //     */
-  //     const selected = state.listSelected;
-  //     /*
-  //     |
-  //     | THE SELECTED VALUE IS ALWAYS [] | EMPTY ARRAY
-  //     |
-  //     */
-  //     if (selected.length > 0) {
-  //       dispatch(
-  //         openConfirm({
-  //           callbackId: "user.kasir.list.item.action.delete",
-  //           title: "Hapus",
-  //           body: `Hapus data?`,
-  //         }),
-  //       );
-  //     }
-  //   }
-  // }
+  function pressHandler({ key }: any) {
+    if (key == "Delete") {
+      /*
+      |
+      | MUST BE FIXED !!!
+      |
+      */
+      const selected = state.listSelected;
+      /*
+      |
+      | THE SELECTED VALUE IS ALWAYS [] | EMPTY ARRAY
+      |
+      */
+      if (selected.length > 0) {
+        dispatch(
+          openConfirm({
+            callbackId: "user.kasir.list.item.action.delete",
+            title: "Hapus",
+            body: `Hapus data?`,
+          }),
+        );
+      }
+    }
+  }
 
-  // // First load Effetc
-  // useEffect(() => {
-  //   $(document).on("keyup", pressHandler);
-  //   return () => {
-  //     $(document).off("keyup", pressHandler);
-  //   };
-  // }, []);
+  // First load Effetc
+  useEffect(() => {
+    $(document).on("keyup", pressHandler);
+    return () => {
+      $(document).off("keyup", pressHandler);
+    };
+  }, [state.listSelected]);
 
   // Detect confirm callback, this will triggered by yes button inside confirm box
   useEffect(() => {
@@ -99,7 +118,7 @@ export function UserKasirListItem({ dataKasir }: any): ReactNode {
         }
         /* UPDATE ACTION */
         if (confirmState.callbackId == "user.kasir.list.item.action.update") {
-          // Run update task ...
+          // Open update form
           // Remove confirm box
           dispatch(removeConfirm());
         }
@@ -126,7 +145,22 @@ export function UserKasirListItem({ dataKasir }: any): ReactNode {
           <div
             key={dx}
             className={matched ? "Item Item-Selected" : "Item"}
-            onClick={() => select(d)}
+            /*
+            | SELECTION
+            | Hold control button + left mouse key listener
+            */
+            onClick={(e) => {
+              switch (true) {
+                // Multiple selection
+                case e.ctrlKey:
+                  multipleSelection(d);
+                  break;
+
+                // Single selection (default)
+                default:
+                  singleSelection(d);
+              }
+            }}
           >
             {/* Nama */}
             <p data-tooltip-id={d.nama} className="Nama">
