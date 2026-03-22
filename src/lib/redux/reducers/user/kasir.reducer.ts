@@ -7,7 +7,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 9-Feb-2026
-|  Updated At: 4-Mar-2026
+|  Updated At: 22-Mar-2026
 */
 
 // Node Modules
@@ -72,6 +72,10 @@ function RemoveListItemSelectedHandler(
   );
 }
 
+function RemoveAllListItemSelectedHandler(state: UserKasirInterface) {
+  state.listSelected = [];
+}
+
 function OpenInsertFormHandler(state: UserKasirInterface) {
   state.insert.opened = true;
 }
@@ -103,6 +107,7 @@ const UserKasirReducer = createSlice({
     addNewUserKasirListItem: AddNewListItemHandler,
     addUserKasirListItemSelected: AddListItemSelectedHandler,
     removeUserKasirListItemSelected: RemoveListItemSelectedHandler,
+    removeAllUserKasirListItemSelected: RemoveAllListItemSelectedHandler,
 
     // Insert Form
     openUserKasirInsertForm: OpenInsertFormHandler,
@@ -118,6 +123,7 @@ export const {
   addNewUserKasirListItem,
   addUserKasirListItemSelected,
   removeUserKasirListItemSelected,
+  removeAllUserKasirListItemSelected,
 
   // Insert Form
   openUserKasirInsertForm,

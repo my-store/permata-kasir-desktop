@@ -24,9 +24,9 @@
                     @include padx(0.15rem)
                     width: 50vw
 
-                .Online
+                .Status
                     @include flex-just-center
-                    width: 10vw
+                    width: 20vw
 
                     span
                         width: 0.9vw
@@ -34,11 +34,20 @@
                         border-radius: 2vw
                         display: block
 
-                        &:is(.Yes)
+                        &:nth-last-child(1)
+                            margin-left: 0.2rem
+
+                        &:is(.Online)
                             background-color: #53eead
 
-                        &:is(.No)
-                            background-color: #ee5368
+                        &:is(.Offline)
+                            background-color: #acacac
+
+                        &:is(.Active)
+                            background-color: #5377ee
+
+                        &:is(.Not-Active)
+                            background-color: #ee5353
 
                 .Tlp
                     @include padx(0.15rem)

@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 26-Feb-2026
-|  Updated At: 26-Feb-2026
+|  Updated At: 22-Mar-2026
 */
 
 // Node Modules
@@ -19,7 +19,7 @@ export function UserKasirListHeader(): ReactNode {
     <div id="Item-Header">
       <p id="Nama">Nama</p>
       <p id="Alamat">Alamat</p>
-      <p id="Online">Online</p>
+      <p id="Status">Status/Online</p>
       <p id="Tlp">No. Tlp</p>
     </div>
   );

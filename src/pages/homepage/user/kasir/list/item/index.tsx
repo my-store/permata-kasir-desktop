@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 26-Feb-2026
-|  Updated At: 17-Mar-2026
+|  Updated At: 22-Mar-2026
 */
 
 // Node Modules
@@ -19,6 +19,7 @@ import { ReduxRootStateType } from "../../../../../../lib/redux/store.redux";
 import {
   removeUserKasirListItemSelected,
   addUserKasirListItemSelected,
+  removeAllUserKasirListItemSelected,
 } from "../../../../../../lib/redux/reducers/user/kasir.reducer";
 
 // Tooltip
@@ -112,7 +113,10 @@ export function UserKasirListItem({ dataKasir }: any): ReactNode {
       if (confirmState.opened) {
         /* DELETE ACTION */
         if (confirmState.callbackId == "user.kasir.list.item.action.delete") {
+          // Reset selected items
+          dispatch(removeAllUserKasirListItemSelected());
           // Run delete task ...
+          console.log("Deleting data...");
           // Remove confirm box
           dispatch(removeConfirm());
         }
@@ -172,9 +176,10 @@ export function UserKasirListItem({ dataKasir }: any): ReactNode {
             {/* Alamat */}
             <p className="Alamat">{d.alamat}</p>
 
-            {/* Status Online */}
-            <p className="Online">
-              <span className={d.online ? "Yes" : "No"}></span>
+            {/* Status Online & Aktif */}
+            <p className="Status">
+              <span className={d.active ? "Active" : "Not-Active"}></span>
+              <span className={d.online ? "Online" : "Offline"}></span>
             </p>
 
             {/* No. Tlp */}

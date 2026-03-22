@@ -5,7 +5,7 @@
 |  jika ada perubahan atau penambahan fitur baru.
 |  -----------------------------------------------------------
 |  Created At: 26-Feb-2026
-|  Updated At: 26-Feb-2026
+|  Updated At: 22-Mar-2026
 */
 
 // Node Modules
@@ -21,28 +21,33 @@ import { extractTimestamp } from "../../../../../../../lib/system/string";
 import "../../../../../../../styles/pages/homepage/user/kasir/user.kasir.list.item.tooltip.nama.main.style.sass";
 
 export function UserKasirListItemTooltipNama(data: KasirInterface): ReactNode {
-  const createdAt: string = extractTimestamp(data.createdAt || "");
-  const updatedAt: string = extractTimestamp(data.updatedAt || "");
+  let { nama, foto, lastOnline, createdAt, updatedAt } = data;
+
+  lastOnline = lastOnline ? extractTimestamp(lastOnline) : "";
+  createdAt = createdAt ? extractTimestamp(createdAt) : "";
+  updatedAt = updatedAt ? extractTimestamp(updatedAt) : "";
 
   return (
-    <Tooltip id={data.nama} place="bottom-start" className="Tooltip">
+    <Tooltip id={nama} place="bottom-start" className="Tooltip">
       {/* Image */}
       <div
         className="Tooltip-Image"
-        style={{ backgroundImage: `url(${SERVER_URL}/static/${data.foto})` }}
+        style={{ backgroundImage: `url(${SERVER_URL}/static/${foto})` }}
       ></div>
-
-      {/* Status Aktif */}
-      <div className="Tootip-Item">
-        <p className="Key">Aktif</p>
-        <p className="Val">: {data.active ? "Ya" : "Tidak"}</p>
-      </div>
 
       {/* Created | Registered At */}
       <div className="Tootip-Item">
         <p className="Key">Terdaftar</p>
         <p className="Val">: {createdAt}</p>
       </div>
+
+      {/* Last Online */}
+      {lastOnline && (
+        <div className="Tootip-Item">
+          <p className="Key">Terankhir Online</p>
+          <p className="Val">: {lastOnline}</p>
+        </div>
+      )}
 
       {/* Updated At | Only show if trully updated */}
       {createdAt != updatedAt && (
